@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/movie_trailer_icon_image_view"
+        android:layout_width="@dimen/act_movie_data_trailer_icon_size"
+        android:layout_height="@dimen/act_movie_data_trailer_icon_size" />
+
+    <TextView
+        android:id="@+id/movie_trailer_title_tv"
+        android:textSize="@dimen/act_movie_data_heading_font_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+
+</LinearLayout>

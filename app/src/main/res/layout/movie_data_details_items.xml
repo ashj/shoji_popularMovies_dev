@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_movie_data_root_layout_id"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.shoji.example.android.popularmoviesstage1.MovieDataActivity"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/act_movie_data_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/act_movie_data_text_padding"
+            android:paddingRight="@dimen/act_movie_data_text_padding"
+            android:textSize="@dimen/act_movie_data_heading_font_size" />
+
+
+        <ImageView
+            android:id="@+id/act_movie_data_poster_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/act_movie_data_text_padding"
+            android:paddingRight="@dimen/act_movie_data_text_padding"
+            android:paddingTop="@dimen/act_movie_data_text_padding" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/act_movie_data_text_padding"
+            android:paddingRight="@dimen/act_movie_data_text_padding"
+            android:paddingTop="@dimen/act_movie_data_text_padding"
+            android:text="@string/average_vote_label"
+            android:textSize="@dimen/act_movie_data_heading_font_size" />
+
+        <TextView
+            android:id="@+id/act_movie_data_average_vote_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/act_movie_data_text_padding"
+            android:paddingRight="@dimen/act_movie_data_text_padding"
+            android:textSize="@dimen/act_movie_data_text_font_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/act_movie_data_text_padding"
+            android:paddingRight="@dimen/act_movie_data_text_padding"
+            android:paddingTop="@dimen/act_movie_data_text_padding"
+            android:text="@string/overview_label"
+            android:textSize="@dimen/act_movie_data_heading_font_size" />
+
+        <TextView
+            android:id="@+id/act_movie_data_overview_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/act_movie_data_text_padding"
+            android:paddingRight="@dimen/act_movie_data_text_padding"
+            android:textSize="@dimen/act_movie_data_text_font_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/act_movie_data_text_padding"
+            android:paddingRight="@dimen/act_movie_data_text_padding"
+            android:paddingTop="@dimen/act_movie_data_text_padding"
+            android:text="@string/release_date_label"
+            android:textSize="@dimen/act_movie_data_heading_font_size" />
+
+        <TextView
+            android:id="@+id/act_movie_data_release_date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/act_movie_data_text_padding"
+            android:paddingRight="@dimen/act_movie_data_text_padding"
+            android:textSize="@dimen/act_movie_data_text_font_size" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/act_movie_data_heading_font_size"
+            android:paddingLeft="@dimen/act_movie_data_text_padding"
+            android:paddingRight="@dimen/act_movie_data_text_padding"
+            android:paddingTop="@dimen/act_movie_data_text_padding"
+            android:text="@string/duration_label"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/act_movie_data_text_font_size"
+            android:paddingLeft="@dimen/act_movie_data_text_padding"
+            android:paddingRight="@dimen/act_movie_data_text_padding"
+            android:id="@+id/act_movie_data_duration_tv"/>
+
+
+    </LinearLayout>
+
+</ScrollView>

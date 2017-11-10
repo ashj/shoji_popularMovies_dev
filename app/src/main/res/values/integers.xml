@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="main_activity_columns_width_divider">400</integer>
+    <integer name="main_activity_columns_minimum_num_columns">2</integer>
+
+    <!-- Positions for Array sort_criterion_array -->
+    <integer name="pref_sort_criterion_default_value">@integer/pref_sort_criterion_by_popularity</integer>
+    <integer name="pref_sort_criterion_by_popularity">0</integer>
+    <integer name="pref_sort_criterion_by_top_rated">1</integer>
+</resources>

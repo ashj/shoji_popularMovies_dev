@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_movie_data_root_layout_id"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.shoji.example.android.popularmoviesstage1.MovieDataActivity"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_movies_trailer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/act_movie_data_text_padding" />
+
+
+</ScrollView>

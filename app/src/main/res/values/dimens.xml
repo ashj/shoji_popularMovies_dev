@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="act_movie_data_heading_font_size">24sp</dimen>
+    <dimen name="act_movie_data_text_font_size">16sp</dimen>
+    <dimen name="act_movie_data_text_padding">12dp</dimen>
+
+    <dimen name="act_movie_data_trailer_icon_size">32dp</dimen>
+
+    <dimen name="act_main_progressbar_dimen">64dp</dimen>
+
+</resources>

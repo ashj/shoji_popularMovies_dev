@@ -1,0 +1,56 @@
+apply plugin: 'com.android.application'
+
+////
+// Store API keys (Part I)
+// Source: https://medium.com/@cassioso/a-strategy-to-secure-your-api-keys-using-gradle-b9c107272860
+// Reviewer suggestion: https://www.linkedin.com/pulse/how-hide-your-api-key-android-apps-allan-caine
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+    defaultConfig {
+        applicationId "com.shoji.example.android.popularmoviesstage1"
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        ////
+        // Store API keys (Part II)
+        // Source: https://medium.com/@cassioso/a-strategy-to-secure-your-api-keys-using-gradle-b9c107272860
+        // Reviewer suggestion: https://www.linkedin.com/pulse/how-hide-your-api-key-android-apps-allan-caine
+        // TODO (1) [Set THEMOVIEDB_API_KEY] Instructions bellow.
+        // In the keystores.properties file, edit the line with The MovieDB API Key:
+        // THEMOVIEDB_API_KEY="insert_the_key_here"
+        // Then rebuilt the project.
+        buildTypes.each {
+            it.buildConfigField("String", "THEMOVIEDB_API_KEY", keystoreProperties['THEMOVIEDB_API_KEY'])
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.android.support:preference-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
+    testCompile 'junit:junit:4.12'
+}
