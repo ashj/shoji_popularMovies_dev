@@ -8,6 +8,7 @@ import android.util.Log;
 import com.shoji.example.android.popularmoviesstage1.data.MovieData;
 import com.shoji.example.android.popularmoviesstage1.data.MovieReviewData;
 import com.shoji.example.android.popularmoviesstage1.data.YoutubeTrailerData;
+import com.shoji.example.android.popularmoviesstage1.utils.NetworkUtils;
 import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbJsonUtils;
 import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbUtils;
 
@@ -66,6 +67,11 @@ public class TheMovieDb_GetMovieCompleteDetails {
     protected void initOrRestartLoader(int loaderId,
                                        Bundle args,
                                        LoaderManager.LoaderCallbacks callback) {
+        if(!NetworkUtils.isNetworkConnected(mContext)) {
+            mOnLoadFinishedHandler.processFinishAll();
+            return;
+        }
+
         if(null == mLoaderManager.getLoader(loaderId)) {
             mLoaderManager.initLoader(loaderId,
                     args, callback);

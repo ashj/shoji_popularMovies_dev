@@ -73,28 +73,11 @@ public class MovieDataActivity
         if(intent == null || !intent.hasExtra(MOVIEDATA))
             return;
 
-        MovieData movieData = intent.getParcelableExtra(MOVIEDATA);
-
-
-        mIsFetchMovieDetailNeeded = true;
-        mIsFetchMovieTrailersNeeded = true;
-        mIsFetchMovieReviewsNeeded = true;
-
+        createBackgroundTask(intent);
 
         createMovieDataRecyclerView();
 
-        Bundle args = new Bundle();
-        args.putString(TheMovieDb_LoaderCallBacksEx_Listeners.STRING_PARAM,
-                movieData.getId());
-
-        TheMovieDb_GetMovieCompleteDetails.TheMovieDbOnLoadFinishedLister processResults = this;
-        mFetchMovieCompleteDetailsTasker = new TheMovieDb_GetMovieCompleteDetails(this,
-                args, getSupportLoaderManager(),
-                processResults);
-
-
         restoreInstanceState(bundle);
-
 
         if(mIsFetchMovieDetailNeeded ||
                 mIsFetchMovieTrailersNeeded||
@@ -109,12 +92,7 @@ public class MovieDataActivity
 
             mMovieTrailerRecyclerView.setAdapter(mMovieDetailsAdapter);
 
-            if (bundle != null && bundle.containsKey(SAVE_INSTANCE_STATE_LIST_POSITION_KEY)) {
-                Parcelable listState = bundle.getParcelable(SAVE_INSTANCE_STATE_LIST_POSITION_KEY);
-                if (listState != null)
-                    mMovieTrailerRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
-
-            }
+            restoreRecyclerViewInstanceState(bundle);
         }
     }
 
@@ -141,20 +119,37 @@ public class MovieDataActivity
         mMovieTrailerRecyclerView.setAdapter(mMovieDetailsAdapter);
     }
 
+    private void createBackgroundTask(Intent intent) {
+        MovieData movieData = intent.getParcelableExtra(MOVIEDATA);
+        Bundle args = new Bundle();
+        args.putString(TheMovieDb_LoaderCallBacksEx_Listeners.STRING_PARAM,
+                movieData.getId());
 
+        TheMovieDb_GetMovieCompleteDetails.TheMovieDbOnLoadFinishedLister processResults = this;
+        mFetchMovieCompleteDetailsTasker = new TheMovieDb_GetMovieCompleteDetails(this,
+                args, getSupportLoaderManager(),
+                processResults);
+    }
 
 
 
     private void doFetchMovieTrailersAndReview() {
 
-        if(!isNetworkConnected()) {
+        if(!arePreconditionsValid(R.id.activity_movie_data_root_layout_id)) {
             return;
         }
         mFetchMovieCompleteDetailsTasker.execute();
 
     }
 
+
+
+    // [START] Recover/Save Instance state
     private void restoreInstanceState(Bundle state) {
+        mIsFetchMovieDetailNeeded = true;
+        mIsFetchMovieTrailersNeeded = true;
+        mIsFetchMovieReviewsNeeded = true;
+
         if(state == null)
             return;
 
@@ -173,26 +168,36 @@ public class MovieDataActivity
 
     }
 
+    private void restoreRecyclerViewInstanceState(Bundle bundle) {
+        if (bundle != null && bundle.containsKey(SAVE_INSTANCE_STATE_LIST_POSITION_KEY)) {
+            Parcelable listState = bundle.getParcelable(SAVE_INSTANCE_STATE_LIST_POSITION_KEY);
+            if (listState != null)
+                mMovieTrailerRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
+
+        }
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        if(mMovieData == null || mTrailerList == null || mReviewList == null)
+            return;
+
         Parcelable listState = mMovieTrailerRecyclerView.getLayoutManager().onSaveInstanceState();
         if(listState != null)
             outState.putParcelable(SAVE_INSTANCE_STATE_LIST_POSITION_KEY, listState);
-        if(mMovieData != null) {
-            //Log.d(TAG, "Saved movie detail");
-            outState.putParcelable(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY, mMovieData);
-        }
-        if(mTrailerList != null) {
-            //Log.d(TAG, "Saved movie trailers");
-            outState.putParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_TRAILERS_KEY, mTrailerList);
-        }
-        if(mReviewList != null) {
-            //Log.d(TAG, "Saved movie reviews");
-            outState.putParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_REVIEWS_KEY, mReviewList);
-        }
+
+        //Log.d(TAG, "Saved movie detail");
+        outState.putParcelable(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY, mMovieData);
+
+        //Log.d(TAG, "Saved movie trailers");
+        outState.putParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_TRAILERS_KEY, mTrailerList);
+
+        //Log.d(TAG, "Saved movie reviews");
+        outState.putParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_REVIEWS_KEY, mReviewList);
     }
+    // [END] Recover/Save Instance state
 
 
 
