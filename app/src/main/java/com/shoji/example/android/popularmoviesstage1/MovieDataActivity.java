@@ -36,11 +36,6 @@ public class MovieDataActivity
 
     public static final String MOVIEDATA = "movie_data";
 
-
-
-
-
-
     private RecyclerView mMovieTrailerRecyclerView;
     private MovieDetailsAdapter mMovieDetailsAdapter;
 
@@ -54,9 +49,6 @@ public class MovieDataActivity
     private final static String SAVE_INSTANCE_STATE_MOVIE_TRAILERS_KEY = "movie_trailers";
     private final static String SAVE_INSTANCE_STATE_MOVIE_REVIEWS_KEY = "movie_reviews";
 
-    private boolean mIsFetchMovieDetailNeeded;
-    private boolean mIsFetchMovieTrailersNeeded;
-    private boolean mIsFetchMovieReviewsNeeded;
 
     private TheMovieDb_GetMovieCompleteDetails mFetchMovieCompleteDetailsTasker;
 
@@ -77,21 +69,15 @@ public class MovieDataActivity
 
         createMovieDataRecyclerView();
 
-        restoreInstanceState(bundle);
+        boolean isInstanceStateDataPresent = isRestoreInstanceStatePossible(bundle);
 
-        if(mIsFetchMovieDetailNeeded ||
-                mIsFetchMovieTrailersNeeded||
-                mIsFetchMovieReviewsNeeded) {
+        if(false == isInstanceStateDataPresent) {
+            Log.d(TAG, "Fetching info from network");
             doFetchMovieTrailersAndReview();
         }
         else {
             Log.d(TAG, "Recovered info from instance");
-            mMovieDetailsAdapter.setMovieData(mMovieData);
-            mMovieDetailsAdapter.setTrailerData(mTrailerList);
-            mMovieDetailsAdapter.setReviewData(mReviewList);
-
-            mMovieTrailerRecyclerView.setAdapter(mMovieDetailsAdapter);
-
+            processFinishAll();
             restoreRecyclerViewInstanceState(bundle);
         }
     }
@@ -145,27 +131,20 @@ public class MovieDataActivity
 
 
     // [START] Recover/Save Instance state
-    private void restoreInstanceState(Bundle state) {
-        mIsFetchMovieDetailNeeded = true;
-        mIsFetchMovieTrailersNeeded = true;
-        mIsFetchMovieReviewsNeeded = true;
+    private boolean isRestoreInstanceStatePossible(Bundle state) {
 
-        if(state == null)
-            return;
-
-        if(state.containsKey(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY)) {
-            mMovieData = state.getParcelable(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY);
-            mIsFetchMovieDetailNeeded = false;
-        }
-        if(state.containsKey(SAVE_INSTANCE_STATE_MOVIE_TRAILERS_KEY)) {
-            mTrailerList = state.getParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_TRAILERS_KEY);
-            mIsFetchMovieTrailersNeeded = false;
-        }
-        if(state.containsKey(SAVE_INSTANCE_STATE_MOVIE_REVIEWS_KEY)) {
-            mReviewList = state.getParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_REVIEWS_KEY);
-            mIsFetchMovieReviewsNeeded = false;
+        if (state == null ||
+                !state.containsKey(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY) ||
+                !state.containsKey(SAVE_INSTANCE_STATE_MOVIE_TRAILERS_KEY) ||
+                !state.containsKey(SAVE_INSTANCE_STATE_MOVIE_REVIEWS_KEY)) {
+            return false;
         }
 
+        mMovieData = state.getParcelable(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY);
+        mTrailerList = state.getParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_TRAILERS_KEY);
+        mReviewList = state.getParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_REVIEWS_KEY);
+
+        return true;
     }
 
     private void restoreRecyclerViewInstanceState(Bundle bundle) {
@@ -260,28 +239,24 @@ public class MovieDataActivity
     @Override
     public void processMovieData(MovieData movieData) {
         mMovieData = movieData;
-        mMovieDetailsAdapter.setMovieData(mMovieData);
     }
 
     @Override
     public void processMovieTrailers(ArrayList<YoutubeTrailerData> trailerList) {
-        //for (int i = 0; i < trailerList.size(); i++)
-        //    Log.d(TAG, "Trailers (" + i + ") json:" + trailerList.get(i).toString());
-
         mTrailerList = trailerList;
-        mMovieDetailsAdapter.setTrailerData(mTrailerList);
     }
 
     @Override
     public void processMovieReviews(ArrayList<MovieReviewData> reviewsList) {
         mReviewList = reviewsList;
-        for (int i = 0; i < reviewsList.size(); i++)
-            Log.d(TAG, "Reviews (" + i + ") json:" + reviewsList.get(i).toString());
-        mMovieDetailsAdapter.setReviewData(mReviewList);
     }
 
     @Override
     public void processFinishAll() {
+        mMovieDetailsAdapter.setMovieData(mMovieData);
+        mMovieDetailsAdapter.setTrailerData(mTrailerList);
+        mMovieDetailsAdapter.setReviewData(mReviewList);
+
         mMovieTrailerRecyclerView.setAdapter(mMovieDetailsAdapter);
     }
     // [END] Results processing for each step
