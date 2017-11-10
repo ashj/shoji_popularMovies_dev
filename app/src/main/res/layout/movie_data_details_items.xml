@@ -98,6 +98,14 @@
             android:paddingRight="@dimen/act_movie_data_text_padding"
             android:id="@+id/act_movie_data_duration_tv"/>
 
+        <Button
+            android:layout_width="@dimen/act_movie_data_favorite_button_w"
+            android:layout_height="@dimen/act_movie_data_favorite_button_h"
+            android:textAlignment="center"
+            android:focusable="false"
+            tools:text="@string/mark_as_favorite"
+            android:id="@+id/act_movie_data_favorite_button"/>
+
 
     </LinearLayout>
 

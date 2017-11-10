@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,19 +24,32 @@ public class MovieDetailsViewHolder
     private TextView mReleaseDate;
     private TextView mDuration;
 
+    public Button getFavoriteButton() {
+        return mFavoriteButton;
+    }
+
+    private Button mFavoriteButton;
+
+    private OnClickFavoriteButtonListener mOnClickFavoriteButtonHandler;
+
+    public interface OnClickFavoriteButtonListener {
+        void OnClick(View view);
+    }
+
+
     public MovieDetailsViewHolder(
             Context context,
             View itemView) {
         super(itemView);
 
         this.mContext = context;
-        mVoteAverage = (TextView) itemView.findViewById(R.id.act_movie_data_average_vote_tv);
-        mTitle = (TextView) itemView.findViewById(R.id.act_movie_data_title_tv);
-        mPosterImage = (ImageView) itemView.findViewById(R.id.act_movie_data_poster_image_view);
-        mOverview = (TextView) itemView.findViewById(R.id.act_movie_data_overview_tv);
-        mReleaseDate = (TextView) itemView.findViewById(R.id.act_movie_data_release_date_tv);
-        mDuration = (TextView) itemView.findViewById(R.id.act_movie_data_duration_tv);
-
+        mVoteAverage = itemView.findViewById(R.id.act_movie_data_average_vote_tv);
+        mTitle = itemView.findViewById(R.id.act_movie_data_title_tv);
+        mPosterImage = itemView.findViewById(R.id.act_movie_data_poster_image_view);
+        mOverview = itemView.findViewById(R.id.act_movie_data_overview_tv);
+        mReleaseDate = itemView.findViewById(R.id.act_movie_data_release_date_tv);
+        mDuration = itemView.findViewById(R.id.act_movie_data_duration_tv);
+        mFavoriteButton = itemView.findViewById(R.id.act_movie_data_favorite_button);
 
 
     }
@@ -50,10 +64,28 @@ public class MovieDetailsViewHolder
         mReleaseDate.setText(movieData.getReleaseDate());
         mDuration.setText(context.getString(R.string.duration_formatted_value, movieData.getDuration()));
 
+        mFavoriteButton.setText(context.getString(R.string.mark_as_favorite)); // TODO implement FAVORITES
+        mFavoriteButton.setOnClickListener(onClickFavorite(context));
         String posterPath = movieData.getPosterPath();
         int posterSize = TheMovieDbUtils.POSTER_SIZE_BIG;
         TheMovieDbUtils.loadImage(context, posterPath, posterSize, mPosterImage);
 
+    }
+
+    // TODO implement FAVORITES
+    public void setOnClickFavoriteButtonListener(OnClickFavoriteButtonListener listener) {
+        mOnClickFavoriteButtonHandler = listener;
+    }
+
+    public View.OnClickListener onClickFavorite(final Context context) {
+        return new View.OnClickListener() {
+            private int state = 0;
+            @Override
+            public void onClick(View view) {
+
+                mOnClickFavoriteButtonHandler.OnClick(view);
+            }
+        };
     }
 
 }

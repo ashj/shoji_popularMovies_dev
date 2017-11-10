@@ -27,6 +27,9 @@
     <string name="duration_label">Duration</string>
     <string name="duration_formatted_value"><xliff:g>%1$s</xliff:g>min</string>
 
+    <string name="mark_as_favorite">\u2606 MARK AS\nFAVORITE</string>
+    <string name="unmark_as_favorite">\u2605 UNMARK AS\nFAVORITE</string>
+
     <string name="error_null_json_returned">Something went wrong.</string>
     <string name="error_no_network_connectivity">Could not retrieve data. Check network connectivity.</string>
     <string name="error_no_network_connectivity_snackbar">No Internet connectivity.</string>

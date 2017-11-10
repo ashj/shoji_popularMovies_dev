@@ -12,6 +12,7 @@ import android.os.PersistableBundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Button;
 
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksEx;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_LoaderCallBacksEx_Listeners;
@@ -29,7 +30,8 @@ import java.util.List;
 
 public class MovieDataActivity
         extends TheMovieDbAppCompat
-        implements MovieDetailsAdapter.MovieTrailerAdapterOnClickHandler{
+        implements MovieDetailsAdapter.MovieTrailerAdapterOnClickHandler,
+        MovieDetailsAdapter.MovieFavoriteAdapterOnClickHandler {
     private static final String TAG = MovieDataActivity.class.getSimpleName();
 
     public static final String MOVIEDATA = "movie_data";
@@ -65,12 +67,9 @@ public class MovieDataActivity
     private boolean mIsFetchMovieTrailersNeeded;
     private boolean mIsFetchMovieReviewsNeeded;
 
-    /*private TextView mVoteAverage;
-    private TextView mTitle;
-    private ImageView mPosterImage;
-    private TextView mOverview;
-    private TextView mReleaseDate;
-    private TextView mDuration;*/
+    // TODO implement FAVORITE
+    private int state = 0;
+
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -127,8 +126,13 @@ public class MovieDataActivity
         mMovieTrailerRecyclerView.setHasFixedSize(true);
 
         /* set the adapter */
-        MovieDetailsAdapter.MovieTrailerAdapterOnClickHandler movieTrailerAdapterOnClickHandler = this;
-        mMovieDetailsAdapter = new MovieDetailsAdapter(context, movieTrailerAdapterOnClickHandler);
+        MovieDetailsAdapter.MovieTrailerAdapterOnClickHandler
+                movieTrailerAdapterOnClickHandler = this;
+        MovieDetailsAdapter.MovieFavoriteAdapterOnClickHandler
+                movieFavoriteAdapterOnClickHandler = this;
+        mMovieDetailsAdapter = new MovieDetailsAdapter(context,
+                movieFavoriteAdapterOnClickHandler,
+                movieTrailerAdapterOnClickHandler);
         mMovieTrailerRecyclerView.setAdapter(mMovieDetailsAdapter);
     }
 
@@ -208,6 +212,20 @@ public class MovieDataActivity
         }
     }
 
+    // TODO implement FAVORITE
+    @Override
+    public void onClickFavoriteButton(Button button) {
+        Log.d(TAG, "Clicked on favorite");
+        if (state == 0) {
+            button.setText(getString(R.string.unmark_as_favorite));
+            state = 1;
+        } else if (state == 1) {
+            button.setText(getString(R.string.mark_as_favorite));
+            state = 0;
+        }
+
+    }
+
     @Override
     public void onClickMovieTrailer(YoutubeTrailerData trailerData) {
         Log.d(TAG, "Tapped at trailer:"+trailerData.toString());
@@ -238,6 +256,8 @@ public class MovieDataActivity
         List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
         return activities.size() > 0;
     }
+
+
 
     // [START] Implement fetch, parse for json and data processing
     private class MovieDataResultListener

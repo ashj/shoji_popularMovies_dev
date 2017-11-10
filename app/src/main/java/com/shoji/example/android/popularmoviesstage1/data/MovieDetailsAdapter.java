@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.shoji.example.android.popularmoviesstage1.R;
 import com.shoji.example.android.popularmoviesstage1.data.MovieTrailerDataViewHolder.MovieTrailerViewHolderOnClickListener;
@@ -18,6 +19,9 @@ public class MovieDetailsAdapter
         implements MovieTrailerViewHolderOnClickListener {
     private final static String TAG = MovieDetailsAdapter.class.getSimpleName();
     private static boolean DBG = true;
+    private static boolean DBG_VIEWTYPE_MSG = false;
+    private static boolean DBG_MOVIEDATA_MSG = false;
+
     private static final int POSITION_MOVIE_DETAILS = 0;
 
 
@@ -37,7 +41,11 @@ public class MovieDetailsAdapter
     private ArrayList<MovieReviewData> mReviewList;
 
     private MovieTrailerAdapterOnClickHandler mMovieTrailerAdapterOnClickHandler;
+    private MovieFavoriteAdapterOnClickHandler mMovieFavoriteAdapterOnClickHandler;
 
+    public interface MovieFavoriteAdapterOnClickHandler {
+        void onClickFavoriteButton(Button button);
+    }
 
     public interface MovieTrailerAdapterOnClickHandler {
         void onClickMovieTrailer(YoutubeTrailerData youtubeTrailerData);
@@ -46,8 +54,10 @@ public class MovieDetailsAdapter
 
     public MovieDetailsAdapter(
             Context context,
+            MovieFavoriteAdapterOnClickHandler movieFavoriteAdapterOnClickHandler,
             MovieTrailerAdapterOnClickHandler movieTrailerAdapterOnClickHandler) {
         this.mContext = context;
+        mMovieFavoriteAdapterOnClickHandler = movieFavoriteAdapterOnClickHandler;
         this.mMovieTrailerAdapterOnClickHandler = movieTrailerAdapterOnClickHandler;
     }
 
@@ -121,31 +131,33 @@ public class MovieDetailsAdapter
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Log.d(TAG, "Binding at="+position);
+        //Log.d(TAG, "Binding at="+position);
         int positionOffset = 0;
         switch (holder.getItemViewType()) {
             case ITEMVIEWTYPE_MOVIE_DETAILS:
-                Log.d(TAG, "Binding the movie details");
+                //Log.d(TAG, "Binding the movie details");
                 MovieDetailsViewHolder movieDataHolder = (MovieDetailsViewHolder) holder;
                 movieDataHolder.bindViewHolder(mContext, mMovieData);
+                movieDataHolder.setOnClickFavoriteButtonListener(new MovieDetailsFavoriteButtonHandler()
+                );
                 break;
 
             case ITEMVIEWTYPE_MOVIE_TRAILERS:
-                Log.d(TAG, "Binding the movie trailers");
+                //Log.d(TAG, "Binding the movie trailers");
                 positionOffset = getItemCountUpTo(ITEMVIEWTYPE_MOVIE_DETAILS);
                 MovieTrailerDataViewHolder trailerViewHolder = (MovieTrailerDataViewHolder) holder;
                 YoutubeTrailerData trailerItem = mTrailerData.get(position-positionOffset);
-                Log.d(TAG, "got item i="+position+". value= "+trailerItem.toString());
+                //Log.d(TAG, "got item i="+position+". value= "+trailerItem.toString());
                 trailerViewHolder.bindViewHolder(trailerItem);
                 break;
 
             case ITEMVIEWTYPE_MOVIE_REVIEWS:
-                Log.d(TAG, "Binding the movie trailers");
+                //Log.d(TAG, "Binding the movie trailers");
                 positionOffset = getItemCountUpTo(ITEMVIEWTYPE_MOVIE_TRAILERS);
-                Log.d(TAG, "Offset for trailers="+positionOffset);
+                //Log.d(TAG, "Offset for trailers="+positionOffset);
                 MovieReviewDataViewHolder moviewView = (MovieReviewDataViewHolder) holder;
                 MovieReviewData reviewItem = mReviewList.get(position-positionOffset);
-                Log.d(TAG, "got item i="+position+". value= "+reviewItem.toString());
+                //Log.d(TAG, "got item i="+position+". value= "+reviewItem.toString());
                 moviewView.bindViewHolder(reviewItem);
                 break;
             default:
@@ -153,6 +165,20 @@ public class MovieDetailsAdapter
 
         }
     }
+
+    //TODO implement FAVORITE
+    private class MovieDetailsFavoriteButtonHandler implements
+    MovieDetailsViewHolder.OnClickFavoriteButtonListener {
+        @Override
+        public void OnClick(View view) {
+            if(view.getId() == R.id.act_movie_data_favorite_button) {
+                Button button = (Button) view;
+                mMovieFavoriteAdapterOnClickHandler.onClickFavoriteButton(button);
+            }
+
+        }
+    }
+
 
     @Override
     public int getItemCount() {
@@ -167,7 +193,7 @@ public class MovieDetailsAdapter
             totalCount = 1;
 
             if(itemViewId == ITEMVIEWTYPE_MOVIE_DETAILS) {
-                if (DBG) Log.d(TAG, "count up to movie data:" + totalCount);
+                if (DBG_VIEWTYPE_MSG) Log.d(TAG, "count up to movie data:" + totalCount);
                 return totalCount;
             }
         }
@@ -176,7 +202,7 @@ public class MovieDetailsAdapter
             totalCount += mTrailerData.size();
 
             if(itemViewId == ITEMVIEWTYPE_MOVIE_TRAILERS) {
-                if (DBG) Log.d(TAG, "count up to trailers:" + totalCount);
+                if (DBG_VIEWTYPE_MSG) Log.d(TAG, "count up to trailers:" + totalCount);
                 return totalCount;
             }
         }
@@ -185,19 +211,19 @@ public class MovieDetailsAdapter
             totalCount += mReviewList.size();
 
             if (itemViewId == ITEMVIEWTYPE_MOVIE_REVIEWS) {
-                if (DBG) Log.d(TAG, "count up to reviews:" + totalCount);
+                if (DBG_VIEWTYPE_MSG) Log.d(TAG, "count up to reviews:" + totalCount);
                 return totalCount;
             }
         }
 
-        if(DBG) Log.d(TAG, "count up to ALL:"+totalCount);
+        //if(DBG_VIEWTYPE_MSG) Log.d(TAG, "count up to ALL:"+totalCount);
         return totalCount;
     }
 
     @Override
     public int getItemViewType(int position) {
         int viewType = ITEMVIEWTYPE_UNKNOWN;
-        if(DBG) Log.d(TAG, "getItemViewType - position:"+position);
+        //if(DBG_VIEWTYPE_MSG) Log.d(TAG, "getItemViewType - position:"+position);
 
         int startingPosition = 0;
         int numTrailers = 0;
@@ -215,16 +241,16 @@ public class MovieDetailsAdapter
 
         if((startingPosition == POSITION_MOVIE_DETAILS) &&
                 (position == startingPosition)) {
-            if(DBG) Log.d(TAG, "Movie details type");
+            //if(DBG_VIEWTYPE_MSG) Log.d(TAG, "Movie details type");
             viewType = ITEMVIEWTYPE_MOVIE_DETAILS;
         }
 
         else if((numTrailers != 0) && (startingPosition < position) && (position <= numTrailers)) {
-            if(DBG) Log.d(TAG, "Movie trailer type");
+            //if(DBG_VIEWTYPE_MSG) Log.d(TAG, "Movie trailer type");
             viewType = ITEMVIEWTYPE_MOVIE_TRAILERS;
         }
         else if((numReviews != 0) && (numTrailers < position) && (position <= numTrailers + numReviews)) {
-            if(DBG) Log.d(TAG, "Movie reviews type");
+            //if(DBG_VIEWTYPE_MSG) Log.d(TAG, "Movie reviews type");
             viewType = ITEMVIEWTYPE_MOVIE_REVIEWS;
         }
 
@@ -238,7 +264,7 @@ public class MovieDetailsAdapter
 
         switch(getItemViewType(position)) {
             case ITEMVIEWTYPE_MOVIE_DETAILS:
-                if(DBG) Log.d(TAG, "clicked on details part, nothing to be done.");
+                //if(DBG_VIEWTYPE_MSG) Log.d(TAG, "clicked on details part, nothing to be done.");
                 break;
             case ITEMVIEWTYPE_MOVIE_TRAILERS:
                 positionOffset = getItemCountUpTo(ITEMVIEWTYPE_MOVIE_DETAILS);

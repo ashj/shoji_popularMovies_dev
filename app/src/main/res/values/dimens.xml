@@ -6,6 +6,9 @@
 
     <dimen name="act_movie_data_trailer_icon_size">32dp</dimen>
 
+    <dimen name="act_movie_data_favorite_button_w">120dp</dimen>
+    <dimen name="act_movie_data_favorite_button_h">60dp</dimen>
+
     <dimen name="act_main_progressbar_dimen">64dp</dimen>
 
 </resources>
