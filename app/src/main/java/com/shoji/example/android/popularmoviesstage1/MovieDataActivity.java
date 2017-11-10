@@ -1,6 +1,5 @@
 package com.shoji.example.android.popularmoviesstage1;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,20 +7,20 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.os.PersistableBundle;
+import android.support.v4.app.LoaderManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Button;
 
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksEx;
+import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_GetMovieCompleteDetails;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_LoaderCallBacksEx_Listeners;
+import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_GetMovieCompleteDetails.TheMovieDbOnLoadFinishedLister;
 import com.shoji.example.android.popularmoviesstage1.data.MovieData;
 import com.shoji.example.android.popularmoviesstage1.data.MovieReviewData;
 import com.shoji.example.android.popularmoviesstage1.data.MovieDetailsAdapter;
 import com.shoji.example.android.popularmoviesstage1.data.YoutubeTrailerData;
-import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbJsonUtils;
-import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbUtils;
 import com.shoji.example.android.popularmoviesstage1.utils.UrlStringMaker;
 
 import java.util.ArrayList;
@@ -31,7 +30,8 @@ import java.util.List;
 public class MovieDataActivity
         extends TheMovieDbAppCompat
         implements MovieDetailsAdapter.MovieTrailerAdapterOnClickHandler,
-        MovieDetailsAdapter.MovieFavoriteAdapterOnClickHandler {
+        MovieDetailsAdapter.MovieFavoriteAdapterOnClickHandler,
+        TheMovieDbOnLoadFinishedLister {
     private static final String TAG = MovieDataActivity.class.getSimpleName();
 
     public static final String MOVIEDATA = "movie_data";
@@ -39,19 +39,10 @@ public class MovieDataActivity
 
 
 
-    private final static int LOADER_ID_FETCH_MOVIE_DATA = 10001;
-    private final static int LOADER_ID_FETCH_MOVIE_TRAILERS = 10002;
-    private final static int LOADER_ID_FETCH_MOVIE_REVIEWS = 10003;
+
 
     private RecyclerView mMovieTrailerRecyclerView;
     private MovieDetailsAdapter mMovieDetailsAdapter;
-
-
-
-    private Bundle mArgs;
-    private LoaderCallBacksEx<MovieData> mFetchMovieDataByIdLoaderCallbacks;
-    private LoaderCallBacksEx<ArrayList<YoutubeTrailerData>> mFetchMovieTrailersLoaderCallbacks;
-    private LoaderCallBacksEx<ArrayList<MovieReviewData>> mFetchMovieReviewsLoaderCallbacks;
 
     private MovieData mMovieData;
     private ArrayList<YoutubeTrailerData> mTrailerList;
@@ -67,8 +58,11 @@ public class MovieDataActivity
     private boolean mIsFetchMovieTrailersNeeded;
     private boolean mIsFetchMovieReviewsNeeded;
 
+    private TheMovieDb_GetMovieCompleteDetails mFetchMovieCompleteDetailsTasker;
+
     // TODO implement FAVORITE
     private int state = 0;
+
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -78,7 +72,8 @@ public class MovieDataActivity
         Intent intent = getIntent();
         if(intent == null || !intent.hasExtra(MOVIEDATA))
             return;
-        mMovieData = intent.getParcelableExtra(MOVIEDATA);
+
+        MovieData movieData = intent.getParcelableExtra(MOVIEDATA);
 
 
         mIsFetchMovieDetailNeeded = true;
@@ -87,15 +82,25 @@ public class MovieDataActivity
 
 
         createMovieDataRecyclerView();
-        createFetchListenerAndCallback();
+
+        Bundle args = new Bundle();
+        args.putString(TheMovieDb_LoaderCallBacksEx_Listeners.STRING_PARAM,
+                movieData.getId());
+
+        TheMovieDb_GetMovieCompleteDetails.TheMovieDbOnLoadFinishedLister processResults = this;
+        mFetchMovieCompleteDetailsTasker = new TheMovieDb_GetMovieCompleteDetails(this,
+                args, getSupportLoaderManager(),
+                processResults);
 
 
+        restoreInstanceState(bundle);
 
-        restoreIntenceState(bundle);
 
-
-        if(mIsFetchMovieDetailNeeded == true)
+        if(mIsFetchMovieDetailNeeded ||
+                mIsFetchMovieTrailersNeeded||
+                mIsFetchMovieReviewsNeeded) {
             doFetchMovieTrailersAndReview();
+        }
         else {
             Log.d(TAG, "Recovered info from instance");
             mMovieDetailsAdapter.setMovieData(mMovieData);
@@ -138,41 +143,18 @@ public class MovieDataActivity
 
 
 
-    private void createFetchListenerAndCallback() {
-        Context context = this;
 
-        mArgs = new Bundle();
-        mArgs.putString(TheMovieDb_LoaderCallBacksEx_Listeners.STRING_PARAM,
-                mMovieData.getId());
-
-        mFetchMovieDataByIdLoaderCallbacks =
-                new LoaderCallBacksEx<>(context, new MovieDataResultListener());
-
-
-        mFetchMovieTrailersLoaderCallbacks =
-                new LoaderCallBacksEx<>(context, new TrailersResultListener());
-
-
-        mFetchMovieReviewsLoaderCallbacks =
-                new LoaderCallBacksEx<>(context, new ReviewsResultListener());
-    }
 
     private void doFetchMovieTrailersAndReview() {
 
         if(!isNetworkConnected()) {
             return;
         }
-        initOrRestartLoader(LOADER_ID_FETCH_MOVIE_DATA,
-                mArgs, mFetchMovieDataByIdLoaderCallbacks);
+        mFetchMovieCompleteDetailsTasker.execute();
 
-        /*initOrRestartLoader(LOADER_ID_FETCH_MOVIE_TRAILERS,
-                mArgs, mFetchMovieTrailersLoaderCallbacks);*/
-
-        /*initOrRestartLoader(LOADER_ID_FETCH_MOVIE_REVIEWS,
-                mArgs, mFetchMovieReviewsLoaderCallbacks);*/
     }
 
-    private void restoreIntenceState(Bundle state) {
+    private void restoreInstanceState(Bundle state) {
         if(state == null)
             return;
 
@@ -212,6 +194,10 @@ public class MovieDataActivity
         }
     }
 
+
+
+
+    // [START] Favorite button implementation
     // TODO implement FAVORITE
     @Override
     public void onClickFavoriteButton(Button button) {
@@ -225,14 +211,18 @@ public class MovieDataActivity
         }
 
     }
+    // [END] Favorite button implementation
 
+
+
+    // [START] Launch intents to watch the trailers
     @Override
     public void onClickMovieTrailer(YoutubeTrailerData trailerData) {
-        Log.d(TAG, "Tapped at trailer:"+trailerData.toString());
+        //Log.d(TAG, "Tapped at trailer:"+trailerData.toString());
         String video_key = trailerData.getKey();
 
         String trailerUriString = UrlStringMaker.createYoutubeUriString(video_key);
-        Log.d(TAG, "YT uri="+trailerUriString);
+        //Log.d(TAG, "YT uri="+trailerUriString);
         Intent appIntent = new Intent (Intent.ACTION_VIEW, Uri.parse(trailerUriString));
 
         if(isIntentSafe(appIntent)) {
@@ -240,7 +230,7 @@ public class MovieDataActivity
         }
         else {
             String trailerUrlString = UrlStringMaker.createYoutubeUrlString(video_key);
-            Log.d(TAG, "YT url=" + trailerUrlString);
+            //Log.d(TAG, "YT url=" + trailerUrlString);
             Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(trailerUrlString));
             if(isIntentSafe(webIntent))
                 startActivity(webIntent);
@@ -256,98 +246,38 @@ public class MovieDataActivity
         List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
         return activities.size() > 0;
     }
+    // [END] Launch intents to watch the trailers
 
 
 
-    // [START] Implement fetch, parse for json and data processing
-    private class MovieDataResultListener
-            extends TheMovieDb_LoaderCallBacksEx_Listeners<MovieData>
-    {
-        private final String TAG = MovieDataResultListener.class.getSimpleName();
 
-
-        @Override
-        public String fetchJsonString(String param) {
-            return TheMovieDbUtils.getMovieDataById(param);
-        }
-
-        @Override
-        public MovieData parseJsonString(String jsonString) {
-            return TheMovieDbJsonUtils.parseSingleMovieData(jsonString);
-        }
-
-        @Override
-        public void onLoadFinished(Context context, MovieData result) {
-            Log.d(TAG, "Movie json:"+result);
-            mMovieData = result;
-            mMovieDetailsAdapter.setMovieData(mMovieData);
-
-            initOrRestartLoader(LOADER_ID_FETCH_MOVIE_TRAILERS,
-                    mArgs, mFetchMovieTrailersLoaderCallbacks);
-        }
+    // [START] Results processing for each step
+    @Override
+    public void processMovieData(MovieData movieData) {
+        mMovieData = movieData;
+        mMovieDetailsAdapter.setMovieData(mMovieData);
     }
 
+    @Override
+    public void processMovieTrailers(ArrayList<YoutubeTrailerData> trailerList) {
+        //for (int i = 0; i < trailerList.size(); i++)
+        //    Log.d(TAG, "Trailers (" + i + ") json:" + trailerList.get(i).toString());
 
-    private class TrailersResultListener
-            extends TheMovieDb_LoaderCallBacksEx_Listeners<ArrayList<YoutubeTrailerData>> {
-        private final String TAG = TrailersResultListener.class.getSimpleName();
-
-
-        @Override
-        public String fetchJsonString(String param) {
-            return TheMovieDbUtils.getMovieTrailersById(param);
-        }
-
-        @Override
-        public ArrayList<YoutubeTrailerData> parseJsonString(String jsonString) {
-            return TheMovieDbJsonUtils.parseTrailerListJson(jsonString);
-        }
-
-        @Override
-        public void onLoadFinished(Context context, ArrayList<YoutubeTrailerData> result) {
-            if(result != null) {
-                mTrailerList = result;
-                for (int i = 0; i < result.size(); i++)
-                    Log.d(TAG, "Trailers (" + i + ") json:" + result.get(i).toString());
-
-                mTrailerList = result;
-                mMovieDetailsAdapter.setTrailerData(mTrailerList);
-
-
-                initOrRestartLoader(LOADER_ID_FETCH_MOVIE_REVIEWS,
-                        mArgs, mFetchMovieReviewsLoaderCallbacks);
-            }
-        }
+        mTrailerList = trailerList;
+        mMovieDetailsAdapter.setTrailerData(mTrailerList);
     }
 
-
-
-    private class ReviewsResultListener
-            extends TheMovieDb_LoaderCallBacksEx_Listeners<ArrayList<MovieReviewData>> {
-        private final String TAG = ReviewsResultListener.class.getSimpleName();
-
-        @Override
-        public String fetchJsonString(String param) {
-            return TheMovieDbUtils.getMovieReviewsById(param);
-        }
-
-        @Override
-        public ArrayList<MovieReviewData> parseJsonString(String jsonString) {
-            //Log.d(TAG, "AAAA: "+jsonString);
-            return TheMovieDbJsonUtils.parseMovieReviewJson(jsonString);
-        }
-
-        @Override
-        public void onLoadFinished(Context context, ArrayList<MovieReviewData> result) {
-            if(result != null) {
-                mReviewList = result;
-                for (int i = 0; i < result.size(); i++)
-                    Log.d(TAG, "Reviews (" + i + ") json:" + result.get(i).toString());
-                mMovieDetailsAdapter.setReviewData(mReviewList);
-                mMovieTrailerRecyclerView.setAdapter(mMovieDetailsAdapter);
-            }
-        }
-
+    @Override
+    public void processMovieReviews(ArrayList<MovieReviewData> reviewsList) {
+        mReviewList = reviewsList;
+        for (int i = 0; i < reviewsList.size(); i++)
+            Log.d(TAG, "Reviews (" + i + ") json:" + reviewsList.get(i).toString());
+        mMovieDetailsAdapter.setReviewData(mReviewList);
     }
-    // [END] Implement fetch, parse for json and data processing
+
+    @Override
+    public void processFinishAll() {
+        mMovieTrailerRecyclerView.setAdapter(mMovieDetailsAdapter);
+    }
+    // [END] Results processing for each step
 }
