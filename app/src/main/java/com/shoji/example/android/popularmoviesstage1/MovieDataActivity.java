@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -53,6 +55,16 @@ public class MovieDataActivity
     private ArrayList<YoutubeTrailerData> mTrailerList;
     private ArrayList<MovieReviewData> mReviewList;
 
+
+    private final static String SAVE_INSTANCE_STATE_LIST_POSITION_KEY = "list-position";
+    private final static String SAVE_INSTANCE_STATE_MOVIE_DATA_KEY = "movie_data";
+    private final static String SAVE_INSTANCE_STATE_MOVIE_TRAILERS_KEY = "movie_trailers";
+    private final static String SAVE_INSTANCE_STATE_MOVIE_REVIEWS_KEY = "movie_reviews";
+
+    private boolean mIsFetchMovieDetailNeeded;
+    private boolean mIsFetchMovieTrailersNeeded;
+    private boolean mIsFetchMovieReviewsNeeded;
+
     /*private TextView mVoteAverage;
     private TextView mTitle;
     private ImageView mPosterImage;
@@ -64,39 +76,42 @@ public class MovieDataActivity
         super.onCreate(bundle);
         setContentView(R.layout.activity_movie_data);
 
-
         Intent intent = getIntent();
         if(intent == null || !intent.hasExtra(MOVIEDATA))
             return;
         mMovieData = intent.getParcelableExtra(MOVIEDATA);
 
 
-        /*mVoteAverage = (TextView) findViewById(R.id.act_movie_data_average_vote_tv);
-        mTitle = (TextView) findViewById(R.id.act_movie_data_title_tv);
-        mPosterImage = (ImageView) findViewById(R.id.act_movie_data_poster_image_view);
-        mOverview = (TextView) findViewById(R.id.act_movie_data_overview_tv);
-        mReleaseDate = (TextView) findViewById(R.id.act_movie_data_release_date_tv);
-        mDuration = (TextView) findViewById(R.id.act_movie_data_duration_tv);
-
-
-        mVoteAverage.setText(getString(R.string.average_vote_formatted_value,
-                mMovieData.getVoteAverage(),
-                getString(R.string.average_vote_maximum_value)));
-        mTitle.setText(mMovieData.getTitle());
-        mOverview.setText(mMovieData.getOverview());
-        mReleaseDate.setText(mMovieData.getReleaseDate());
-
-        String posterPath = mMovieData.getPosterPath();
-        //Log.d(TAG, "poster_path=" +posterPath);
-        Context context = this;
-        int posterSize = TheMovieDbUtils.POSTER_SIZE_BIG;
-        TheMovieDbUtils.loadImage(context, posterPath, posterSize, mPosterImage);*/
+        mIsFetchMovieDetailNeeded = true;
+        mIsFetchMovieTrailersNeeded = true;
+        mIsFetchMovieReviewsNeeded = true;
 
 
         createMovieDataRecyclerView();
-
         createFetchListenerAndCallback();
-        doFetchMovieTrailersAndReview();
+
+
+
+        restoreIntenceState(bundle);
+
+
+        if(mIsFetchMovieDetailNeeded == true)
+            doFetchMovieTrailersAndReview();
+        else {
+            Log.d(TAG, "Recovered info from instance");
+            mMovieDetailsAdapter.setMovieData(mMovieData);
+            mMovieDetailsAdapter.setTrailerData(mTrailerList);
+            mMovieDetailsAdapter.setReviewData(mReviewList);
+
+            mMovieTrailerRecyclerView.setAdapter(mMovieDetailsAdapter);
+
+            if (bundle != null && bundle.containsKey(SAVE_INSTANCE_STATE_LIST_POSITION_KEY)) {
+                Parcelable listState = bundle.getParcelable(SAVE_INSTANCE_STATE_LIST_POSITION_KEY);
+                if (listState != null)
+                    mMovieTrailerRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
+
+            }
+        }
     }
 
 
@@ -140,7 +155,7 @@ public class MovieDataActivity
 
     private void doFetchMovieTrailersAndReview() {
 
-        if(!arePreconditionsValid(R.id.activity_movie_data_root_layout_id)) {
+        if(!isNetworkConnected()) {
             return;
         }
         initOrRestartLoader(LOADER_ID_FETCH_MOVIE_DATA,
@@ -151,6 +166,46 @@ public class MovieDataActivity
 
         /*initOrRestartLoader(LOADER_ID_FETCH_MOVIE_REVIEWS,
                 mArgs, mFetchMovieReviewsLoaderCallbacks);*/
+    }
+
+    private void restoreIntenceState(Bundle state) {
+        if(state == null)
+            return;
+
+        if(state.containsKey(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY)) {
+            mMovieData = state.getParcelable(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY);
+            mIsFetchMovieDetailNeeded = false;
+        }
+        if(state.containsKey(SAVE_INSTANCE_STATE_MOVIE_TRAILERS_KEY)) {
+            mTrailerList = state.getParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_TRAILERS_KEY);
+            mIsFetchMovieTrailersNeeded = false;
+        }
+        if(state.containsKey(SAVE_INSTANCE_STATE_MOVIE_REVIEWS_KEY)) {
+            mReviewList = state.getParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_REVIEWS_KEY);
+            mIsFetchMovieReviewsNeeded = false;
+        }
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Parcelable listState = mMovieTrailerRecyclerView.getLayoutManager().onSaveInstanceState();
+        if(listState != null)
+            outState.putParcelable(SAVE_INSTANCE_STATE_LIST_POSITION_KEY, listState);
+        if(mMovieData != null) {
+            //Log.d(TAG, "Saved movie detail");
+            outState.putParcelable(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY, mMovieData);
+        }
+        if(mTrailerList != null) {
+            //Log.d(TAG, "Saved movie trailers");
+            outState.putParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_TRAILERS_KEY, mTrailerList);
+        }
+        if(mReviewList != null) {
+            //Log.d(TAG, "Saved movie reviews");
+            outState.putParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_REVIEWS_KEY, mReviewList);
+        }
     }
 
     @Override

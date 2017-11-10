@@ -125,11 +125,13 @@ public class MovieDetailsAdapter
         int positionOffset = 0;
         switch (holder.getItemViewType()) {
             case ITEMVIEWTYPE_MOVIE_DETAILS:
+                Log.d(TAG, "Binding the movie details");
                 MovieDetailsViewHolder movieDataHolder = (MovieDetailsViewHolder) holder;
                 movieDataHolder.bindViewHolder(mContext, mMovieData);
                 break;
 
             case ITEMVIEWTYPE_MOVIE_TRAILERS:
+                Log.d(TAG, "Binding the movie trailers");
                 positionOffset = getItemCountUpTo(ITEMVIEWTYPE_MOVIE_DETAILS);
                 MovieTrailerDataViewHolder trailerViewHolder = (MovieTrailerDataViewHolder) holder;
                 YoutubeTrailerData trailerItem = mTrailerData.get(position-positionOffset);
@@ -138,7 +140,7 @@ public class MovieDetailsAdapter
                 break;
 
             case ITEMVIEWTYPE_MOVIE_REVIEWS:
-            default:
+                Log.d(TAG, "Binding the movie trailers");
                 positionOffset = getItemCountUpTo(ITEMVIEWTYPE_MOVIE_TRAILERS);
                 Log.d(TAG, "Offset for trailers="+positionOffset);
                 MovieReviewDataViewHolder moviewView = (MovieReviewDataViewHolder) holder;
@@ -146,7 +148,8 @@ public class MovieDetailsAdapter
                 Log.d(TAG, "got item i="+position+". value= "+reviewItem.toString());
                 moviewView.bindViewHolder(reviewItem);
                 break;
-
+            default:
+                break;
 
         }
     }
