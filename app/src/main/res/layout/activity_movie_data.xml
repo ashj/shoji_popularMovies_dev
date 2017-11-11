@@ -12,7 +12,7 @@
         android:id="@+id/recyclerview_movies_trailer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/act_movie_data_text_padding" />
+        android:paddingTop="@dimen/act_movie_data_recyclerView_paddingTop" />
 
 
 </ScrollView>

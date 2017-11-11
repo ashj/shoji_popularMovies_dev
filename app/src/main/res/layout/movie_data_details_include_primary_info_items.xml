@@ -13,9 +13,9 @@
         android:layout_height="wrap_content"
 
         android:adjustViewBounds="true"
-        android:paddingLeft="@dimen/act_movie_data_text_padding"
-        android:paddingRight="@dimen/act_movie_data_text_padding"
-        android:paddingTop="@dimen/act_movie_data_text_padding"
+        android:paddingLeft="@dimen/act_movie_data_text_paddingLeft"
+        android:paddingRight="@dimen/act_movie_data_text_paddingRight"
+        android:paddingTop="@dimen/act_movie_data_text_paddingTop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:background="@color/colorPrimaryDark" />

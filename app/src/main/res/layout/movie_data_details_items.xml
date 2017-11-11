@@ -12,8 +12,8 @@
         android:id="@+id/act_movie_data_title_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/act_movie_data_text_padding"
-        android:paddingRight="@dimen/act_movie_data_text_padding"
+        android:paddingLeft="@dimen/act_movie_data_text_paddingLeft"
+        android:paddingRight="@dimen/act_movie_data_text_paddingRight"
         android:textSize="@dimen/act_movie_data_heading_font_size"
         tools:text="@string/tools_movie_tile" />
 
@@ -31,7 +31,7 @@
 
     <TextView
         android:id="@+id/act_movie_data_overview_label"
-        style="@style/MovieDetailsLabelStyle"
+        style="@style/MovieDetailsLabelStyle2"
         android:text="@string/overview_label"
         app:layout_constraintStart_toStartOf="@+id/act_movie_data_details_primary_info_items"
         app:layout_constraintTop_toBottomOf="@+id/act_movie_data_details_primary_info_items" />
@@ -45,7 +45,7 @@
 
     <TextView
         android:id="@+id/act_movie_data_trailer_label"
-        style="@style/MovieDetailsLabelStyle"
+        style="@style/MovieDetailsLabelStyle2"
         android:text="@string/trailer_other_label"
         app:layout_constraintStart_toStartOf="@+id/act_movie_data_overview_tv"
         app:layout_constraintTop_toBottomOf="@+id/act_movie_data_overview_tv"
