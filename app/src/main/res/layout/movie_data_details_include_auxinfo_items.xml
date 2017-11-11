@@ -6,12 +6,24 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/act_movie_data_favorite_button"
+        android:layout_width="@dimen/act_movie_data_favorite_button_dimen"
+        android:layout_height="@dimen/act_movie_data_favorite_button_dimen"
+        android:focusable="false"
+        android:gravity="center"
+        android:background="@android:drawable/btn_star_big_on"
+        android:layout_marginTop="@dimen/act_movie_data_favorite_paddingVertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/act_movie_data_release_date_label"
         style="@style/MovieDetailsLabelStyle"
+        android:layout_marginTop="@dimen/act_movie_data_favorite_paddingVertical"
         android:text="@string/release_date_label"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/act_movie_data_favorite_button"
+        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_favorite_button" />
 
     <TextView
         android:id="@+id/act_movie_data_release_date_tv"
@@ -48,17 +60,7 @@
         app:layout_constraintTop_toBottomOf="@+id/act_movie_data_duration_label"
         tools:text="@string/tools_movie_duration" />
 
-    <Button
-        android:id="@+id/act_movie_data_favorite_button"
-        android:layout_width="@dimen/act_movie_data_favorite_button_w"
-        android:layout_height="@dimen/act_movie_data_favorite_button_h"
-        android:paddingTop="@dimen/act_movie_data_text_paddingTop"
-        android:focusable="false"
-        android:textAlignment="center"
-        android:textSize="@dimen/act_movie_data_text_font_size"
-        app:layout_constraintStart_toStartOf="@+id/act_movie_data_duration_tv"
-        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_duration_tv"
-        tools:text="@string/mark_as_favorite" />
+
 
 </android.support.constraint.ConstraintLayout>
 

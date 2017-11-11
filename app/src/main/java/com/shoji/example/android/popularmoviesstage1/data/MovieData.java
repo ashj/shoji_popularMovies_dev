@@ -11,6 +11,7 @@ public class MovieData implements Parcelable {
     private String overview;
     private String release_date;
     private String duration;
+    private int isFavorite;
 
     public MovieData() {}
 
@@ -22,6 +23,7 @@ public class MovieData implements Parcelable {
         overview = in.readString();
         release_date = in.readString();
         duration = in.readString();
+        isFavorite = in.readInt();
     }
 
     @Override
@@ -33,6 +35,7 @@ public class MovieData implements Parcelable {
         dest.writeString(overview);
         dest.writeString(release_date);
         dest.writeString(duration);
+        dest.writeInt(isFavorite);
     }
 
     public static final Creator<MovieData> CREATOR = new Creator<MovieData>() {
@@ -104,6 +107,15 @@ public class MovieData implements Parcelable {
         this.duration = duration;
     }
 
+
+    public int getIsFavorite() {
+        return isFavorite;
+    }
+
+    public void setIsFavorite(int isFavorite) {
+        this.isFavorite = isFavorite;
+    }
+
     @Override
     public String toString() {
         return "Title: " + title +
@@ -112,6 +124,7 @@ public class MovieData implements Parcelable {
                 "\nOverview: " + overview +
                 "\nVote Average: "+ vote_average +
                 "\nRelease Date: "+ release_date +
-                "\nDuration (min): "+ duration;
+                "\nDuration (min): "+ duration +
+                "\nisFavorite: "+ isFavorite;
     }
 }

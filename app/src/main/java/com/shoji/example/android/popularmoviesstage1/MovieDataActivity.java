@@ -7,13 +7,11 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.LoaderManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Button;
 
-import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksEx;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_GetMovieCompleteDetails;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_LoaderCallBacksEx_Listeners;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_GetMovieCompleteDetails.TheMovieDbOnLoadFinishedLister;
@@ -32,6 +30,7 @@ public class MovieDataActivity
         implements MovieDetailsAdapter.MovieTrailerAdapterOnClickHandler,
         MovieDetailsAdapter.MovieFavoriteAdapterOnClickHandler,
         TheMovieDbOnLoadFinishedLister {
+
     private static final String TAG = MovieDataActivity.class.getSimpleName();
 
     public static final String MOVIEDATA = "movie_data";
@@ -52,8 +51,8 @@ public class MovieDataActivity
 
     private TheMovieDb_GetMovieCompleteDetails mFetchMovieCompleteDetailsTasker;
 
-    // TODO implement FAVORITE
-    private int state = 0;
+
+    private boolean mIsFavorite;
 
 
     @Override
@@ -70,6 +69,8 @@ public class MovieDataActivity
         createMovieDataRecyclerView();
 
         boolean isInstanceStateDataPresent = isRestoreInstanceStatePossible(bundle);
+
+        mIsFavorite = true; // TODO implement FAVORITE
 
         if(false == isInstanceStateDataPresent) {
             Log.d(TAG, "Fetching info from network");
@@ -186,14 +187,29 @@ public class MovieDataActivity
     @Override
     public void onClickFavoriteButton(Button button) {
         Log.d(TAG, "Clicked on favorite");
-        if (state == 0) {
-            button.setText(getString(R.string.unmark_as_favorite));
-            state = 1;
-        } else if (state == 1) {
-            button.setText(getString(R.string.mark_as_favorite));
-            state = 0;
-        }
+        updateUi(button);
 
+
+    }
+
+    @Override
+    public void updateUi(Button button) {
+        Log.d(TAG, "updateFavoriteButtonUi");
+        if (mIsFavorite == true) {
+            Log.d(TAG, "Change to on");
+            button.setBackground(getResources().getDrawable(android.R.drawable.btn_star_big_on));
+            mIsFavorite = false;
+        } else {
+            Log.d(TAG, "Change to off");
+            button.setBackground(getResources().getDrawable(android.R.drawable.btn_star_big_off));
+            mIsFavorite = true;
+        }
+    }
+
+    // TODO check somewhere to see if this movie is favorited.
+    private boolean isFavorite(MovieData movieData) {
+        //return (mMovieData!= null && mMovieData.getIsFavorite() == 1);
+        return ((int) (Math.random() * 2)) == 1; // testing
     }
     // [END] Favorite button implementation
 
@@ -253,6 +269,8 @@ public class MovieDataActivity
 
     @Override
     public void processFinishAll() {
+        mIsFavorite = isFavorite(mMovieData);
+
         mMovieDetailsAdapter.setMovieData(mMovieData);
         mMovieDetailsAdapter.setTrailerData(mTrailerList);
         mMovieDetailsAdapter.setReviewData(mReviewList);

@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="favorite_button_activated">@color/colorAccent</color>
+
     <color name="act_movie_data_movie_title_bgcolor">@color/colorPrimaryDark</color>
     <color name="act_movie_data_movie_title_txtcolor">@android:color/white</color>
 </resources>

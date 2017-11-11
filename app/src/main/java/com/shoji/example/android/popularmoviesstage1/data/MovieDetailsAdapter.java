@@ -45,6 +45,7 @@ public class MovieDetailsAdapter
 
     public interface MovieFavoriteAdapterOnClickHandler {
         void onClickFavoriteButton(Button button);
+        void updateUi(Button button);
     }
 
     public interface MovieTrailerAdapterOnClickHandler {
@@ -137,9 +138,8 @@ public class MovieDetailsAdapter
             case ITEMVIEWTYPE_MOVIE_DETAILS:
                 //Log.d(TAG, "Binding the movie details");
                 MovieDetailsViewHolder movieDataHolder = (MovieDetailsViewHolder) holder;
-                movieDataHolder.bindViewHolder(mContext, mMovieData);
-                movieDataHolder.setOnClickFavoriteButtonListener(new MovieDetailsFavoriteButtonHandler()
-                );
+                MovieDetailsFavoriteButtonHandler favButtonHandler = new MovieDetailsFavoriteButtonHandler();
+                movieDataHolder.bindViewHolder(mContext, mMovieData, favButtonHandler);
                 break;
 
             case ITEMVIEWTYPE_MOVIE_TRAILERS:
@@ -175,7 +175,10 @@ public class MovieDetailsAdapter
                 Button button = (Button) view;
                 mMovieFavoriteAdapterOnClickHandler.onClickFavoriteButton(button);
             }
-
+        }
+        @Override
+        public void updateUi(Button button) {
+            mMovieFavoriteAdapterOnClickHandler.updateUi(button);
         }
     }
 

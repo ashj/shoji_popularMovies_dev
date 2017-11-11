@@ -2,7 +2,6 @@ package com.shoji.example.android.popularmoviesstage1.data;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,16 +23,13 @@ public class MovieDetailsViewHolder
     private TextView mReleaseDate;
     private TextView mDuration;
 
-    public Button getFavoriteButton() {
-        return mFavoriteButton;
-    }
-
     private Button mFavoriteButton;
 
     private OnClickFavoriteButtonListener mOnClickFavoriteButtonHandler;
 
     public interface OnClickFavoriteButtonListener {
         void OnClick(View view);
+        void updateUi(Button button);
     }
 
 
@@ -50,11 +46,12 @@ public class MovieDetailsViewHolder
         mReleaseDate = itemView.findViewById(R.id.act_movie_data_release_date_tv);
         mDuration = itemView.findViewById(R.id.act_movie_data_duration_tv);
         mFavoriteButton = itemView.findViewById(R.id.act_movie_data_favorite_button);
-
-
     }
 
-    public void bindViewHolder(Context context, MovieData movieData) {
+
+    public void bindViewHolder(Context context,
+                               MovieData movieData,
+                               OnClickFavoriteButtonListener onClickFavoriteButtonListener) {
         mVoteAverage.setText(
                 context.getString(R.string.average_vote_formatted_value,
                 movieData.getVoteAverage(),
@@ -64,25 +61,22 @@ public class MovieDetailsViewHolder
         mReleaseDate.setText(movieData.getReleaseDate());
         mDuration.setText(context.getString(R.string.duration_formatted_value, movieData.getDuration()));
 
-        mFavoriteButton.setText(context.getString(R.string.mark_as_favorite)); // TODO implement FAVORITES
+
         mFavoriteButton.setOnClickListener(onClickFavorite(context));
+        mOnClickFavoriteButtonHandler = onClickFavoriteButtonListener;
+        mOnClickFavoriteButtonHandler.updateUi(mFavoriteButton);
+
+
         String posterPath = movieData.getPosterPath();
         int posterSize = TheMovieDbUtils.POSTER_SIZE_BIG;
         TheMovieDbUtils.loadImage(context, posterPath, posterSize, mPosterImage);
-
     }
 
-    // TODO implement FAVORITES
-    public void setOnClickFavoriteButtonListener(OnClickFavoriteButtonListener listener) {
-        mOnClickFavoriteButtonHandler = listener;
-    }
 
     public View.OnClickListener onClickFavorite(final Context context) {
         return new View.OnClickListener() {
-            private int state = 0;
             @Override
             public void onClick(View view) {
-
                 mOnClickFavoriteButtonHandler.OnClick(view);
             }
         };

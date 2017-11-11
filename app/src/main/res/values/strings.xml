@@ -40,8 +40,8 @@
         <item quantity="other">@string/trailer_other_label</item>
     </plurals>
 
-    <string name="mark_as_favorite">\u2606 MARK AS\nFAVORITE</string>
-    <string name="unmark_as_favorite">\u2605 UNMARK AS\nFAVORITE</string>
+    <string name="added_to_favorite">Added to favorites</string>
+    <string name="removed_from_favorite">Removed from favorites</string>
 
     <string name="error_null_json_returned">Something went wrong.</string>
     <string name="error_no_network_connectivity">Could not retrieve data. Check network connectivity.</string>
