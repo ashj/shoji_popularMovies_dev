@@ -27,6 +27,8 @@
     <string name="tools_movie_duration">999min</string>
     <string name="tools_movie_overview">Lorem Ipsum</string>
     <string name="tools_trailer_tile">Trailer Title</string>
+    <string name="tools_review_author">Author o' Thereview</string>
+    <string name="tools_review_content">Ipsum Lorem</string>
 
     <string name="average_vote_label">Vote Average</string>
     <string name="average_vote_formatted_value"><xliff:g>%1$s</xliff:g>/<xliff:g>%2$s</xliff:g></string>
@@ -41,6 +43,12 @@
     <plurals name="trailer_plurals_label">
         <item quantity="one">@string/trailer_one_label</item>
         <item quantity="other">@string/trailer_other_label</item>
+    </plurals>
+    <string name="review_one_label">Review</string>
+    <string name="review_other_label">Reviews</string>
+    <plurals name="review_plurals_label">
+        <item quantity="one">@string/review_one_label</item>
+        <item quantity="other">@string/review_other_label</item>
     </plurals>
 
     <string name="added_to_favorite">Added to favorites</string>

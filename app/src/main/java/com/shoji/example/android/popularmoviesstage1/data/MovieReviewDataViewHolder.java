@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shoji.example.android.popularmoviesstage1.R;
@@ -17,7 +16,7 @@ public class MovieReviewDataViewHolder
     private MovieReviewData mMovieReviewData;
 
 
-
+    private TextView mLabel_tv;
     private TextView mAuthor_tv;
     private TextView mContent_tv;
 
@@ -28,6 +27,7 @@ public class MovieReviewDataViewHolder
         super(itemView);
 
         this.mContext = context;
+        mLabel_tv = itemView.findViewById(R.id.movie_review_title_tv);
         mAuthor_tv = itemView.findViewById(R.id.movie_review_author_tv);
         mContent_tv = itemView.findViewById(R.id.movie_review_content_tv);
 
@@ -40,4 +40,10 @@ public class MovieReviewDataViewHolder
         mContent_tv.setText(reviewData.getContent());
     }
 
+    public void showTitleLabel(int numItems) {
+        if(numItems > 0) {
+            mLabel_tv.setText(mContext.getResources().getQuantityString(R.plurals.review_plurals_label, numItems));
+            mLabel_tv.setVisibility(View.VISIBLE);
+        }
+    }
 }

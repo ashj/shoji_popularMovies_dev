@@ -3,9 +3,11 @@
 
     <dimen name="act_movie_data_text_paddingTop">6dp</dimen>
     <dimen name="act_movie_data_text_paddingLeft">6dp</dimen>
-    <dimen name="act_movie_data_text_paddingRight">@dimen/act_movie_data_text_paddingTop</dimen>
+    <dimen name="act_movie_data_text_paddingRight">@dimen/act_movie_data_text_paddingLeft</dimen>
     <dimen name="act_movie_data_body_text_paddingLeft">16dp</dimen>
     <dimen name="act_movie_data_body_text_paddingRight">@dimen/act_movie_data_body_text_paddingLeft</dimen>
+
+    <dimen name="act_movie_data_details_paddingTop">10dp</dimen>
 
     <dimen name="act_movie_data_trailer_poster_w">180dp</dimen>
     <dimen name="act_movie_data_trailer_icon_size">20dp</dimen>
@@ -14,6 +16,8 @@
     <dimen name="act_movie_data_trailer_list_padding">4dp</dimen>
     <dimen name="act_movie_data_trailer_text_paddingLeft">4dp</dimen>
     <dimen name="act_movie_data_trailer_text_paddingRight">@dimen/act_movie_data_trailer_text_paddingLeft</dimen>
+
+    <dimen name="act_movie_data_trailers_paddingBottom">12dp</dimen>
 
     <dimen name="act_movie_data_favorite_paddingVertical">12dp</dimen>
     <dimen name="act_movie_data_favorite_button_dimen">32dp</dimen>

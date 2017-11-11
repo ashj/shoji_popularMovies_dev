@@ -152,13 +152,24 @@ public class MovieDetailsAdapter
                 break;
 
             case ITEMVIEWTYPE_MOVIE_REVIEWS:
+                int listPosition;
+
                 //Log.d(TAG, "Binding the movie trailers");
                 positionOffset = getItemCountUpTo(ITEMVIEWTYPE_MOVIE_TRAILERS);
+
                 //Log.d(TAG, "Offset for trailers="+positionOffset);
-                MovieReviewDataViewHolder moviewView = (MovieReviewDataViewHolder) holder;
-                MovieReviewData reviewItem = mReviewList.get(position-positionOffset);
+                MovieReviewDataViewHolder movieView = (MovieReviewDataViewHolder) holder;
+
+                listPosition = position-positionOffset;
+                Log.d(TAG, "listPosition="+listPosition);
+
+                MovieReviewData reviewItem = mReviewList.get(listPosition);
                 //Log.d(TAG, "got item i="+position+". value= "+reviewItem.toString());
-                moviewView.bindViewHolder(reviewItem);
+                movieView.bindViewHolder(reviewItem);
+                if(listPosition == 0) {
+                    movieView.showTitleLabel(mReviewList.size());
+                }
+
                 break;
             default:
                 break;

@@ -31,7 +31,7 @@
     </style>
 
     <style name="MovieDetailsLabelStyle2" parent="MovieDetailsLabelStyle">
-        <item name="android:paddingTop">@dimen/act_movie_data_text_paddingTop</item>
+        <item name="android:paddingTop">@dimen/act_movie_data_details_paddingTop</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -41,6 +41,14 @@
         <item name="android:paddingEnd">@dimen/act_movie_data_body_text_paddingRight</item>
     </style>
 
+    <style name="MovieReviewsLabelStyle" parent="MovieDetailsLabelStyle">
+        <item name="android:textColor">@color/darker_gray</item>
+    </style>
+
+    <style name="MovieReviewsBodyStyle" parent="MovieDetailsBodyStyle">
+        <item name="android:textColor">@color/darker_gray</item>
+        <item name="android:paddingBottom">@dimen/act_movie_data_trailers_paddingBottom</item>
+    </style>
 
     <style name="MovieDetailsTrailerListStyle" parent="MovieDetailsGeneralStyle">
         <item name="android:paddingStart">@dimen/act_movie_data_trailer_text_paddingLeft</item>

@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
+        android:id="@+id/movie_review_title_tv"
+        tools:text="@string/review_other_label"
+        android:visibility="gone"
+        style="@style/MovieDetailsLabelStyle2"/>
+
+    <TextView
         android:id="@+id/movie_review_author_tv"
-        style="@style/MovieDetailsLabelStyle"/>
+        tools:text="@string/tools_review_author"
+        style="@style/MovieReviewsLabelStyle"/>
 
     <TextView
         android:id="@+id/movie_review_content_tv"
-        style="@style/MovieDetailsBodyStyle" />
+        tools:text="@string/tools_review_content"
+        style="@style/MovieReviewsBodyStyle" />
 
 
 
