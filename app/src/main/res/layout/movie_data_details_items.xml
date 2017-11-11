@@ -17,27 +17,13 @@
         android:textSize="@dimen/act_movie_data_heading_font_size"
         tools:text="@string/tools_movie_tile" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/mddi_guideline_right"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="16dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/mddi_guideline_middle"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.6" />
-
 
     <include
         layout="@layout/movie_data_details_include_primary_info_items"
         android:id="@+id/act_movie_data_details_primary_info_items"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/mddi_guideline_right"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/act_movie_data_title_tv" >
 
     </include>
@@ -53,7 +39,7 @@
     <TextView
         android:id="@+id/act_movie_data_overview_tv"
         style="@style/MovieDetailsBodyStyle"
-        app:layout_constraintStart_toStartOf="@+id/act_movie_data_overview_label"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/act_movie_data_overview_label"
         tools:text="@string/tools_movie_overview" />
 

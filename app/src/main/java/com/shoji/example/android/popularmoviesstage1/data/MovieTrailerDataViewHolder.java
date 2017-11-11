@@ -4,11 +4,9 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shoji.example.android.popularmoviesstage1.R;
-import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbUtils;
 
 
 public class MovieTrailerDataViewHolder
@@ -20,7 +18,6 @@ public class MovieTrailerDataViewHolder
 
     private MovieTrailerViewHolderOnClickListener mMovieTrailerViewHolderOnClickListener;
 
-    private ImageView mTrailerIcon;
     private TextView mTitle_tv;
 
     public interface MovieTrailerViewHolderOnClickListener {
@@ -34,9 +31,8 @@ public class MovieTrailerDataViewHolder
         super(itemView);
 
         this.mContext = context;
-        mTrailerIcon = itemView.findViewById(R.id.movie_trailer_icon_image_view);
-        mTitle_tv = itemView.findViewById(R.id.movie_trailer_title_tv);
 
+        mTitle_tv = itemView.findViewById(R.id.movie_trailer_title_tv);
 
         itemView.setOnClickListener(this);
         mMovieTrailerViewHolderOnClickListener = movieTrailerViewHolderOnClickListener;
@@ -44,10 +40,7 @@ public class MovieTrailerDataViewHolder
 
     public void bindViewHolder(YoutubeTrailerData trailerData) {
         mTrailerData = trailerData;
-
         mTitle_tv.setText(trailerData.getTitle());
-
-        mTrailerIcon.setImageResource(R.drawable.ic_play_button);
 
     }
 

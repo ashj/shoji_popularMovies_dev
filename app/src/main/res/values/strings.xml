@@ -23,6 +23,7 @@
     <string name="tools_movie_vote_average">9.9/10</string>
     <string name="tools_movie_duration">999min</string>
     <string name="tools_movie_overview">Lorem Ipsum</string>
+    <string name="tools_trailer_tile">Trailer Title</string>
 
     <string name="average_vote_label">Vote Average</string>
     <string name="average_vote_formatted_value"><xliff:g>%1$s</xliff:g>/<xliff:g>%2$s</xliff:g></string>

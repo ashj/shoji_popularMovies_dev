@@ -15,11 +15,7 @@
 
     <TextView
         android:id="@+id/act_movie_data_release_date_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/act_movie_data_text_padding"
-        android:paddingRight="@dimen/act_movie_data_text_padding"
-        android:textSize="@dimen/act_movie_data_text_font_size"
+        style="@style/MovieDetailsBodyStyle"
         app:layout_constraintStart_toStartOf="@+id/act_movie_data_release_date_label"
         app:layout_constraintTop_toBottomOf="@+id/act_movie_data_release_date_label"
         tools:text="@string/tools_movie_release_date" />

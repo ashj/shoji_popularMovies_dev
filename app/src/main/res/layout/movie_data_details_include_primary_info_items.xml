@@ -17,7 +17,7 @@
         android:paddingRight="@dimen/act_movie_data_text_padding"
         android:paddingTop="@dimen/act_movie_data_text_padding"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_title_tv"
+        app:layout_constraintTop_toTopOf="parent"
         tools:background="@color/colorPrimaryDark" />
 
     <include
@@ -26,7 +26,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/act_movie_data_poster_image_view"
-        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_title_tv" >
+        app:layout_constraintTop_toTopOf="@+id/act_movie_data_poster_image_view"
+        app:layout_constraintBottom_toBottomOf="@+id/act_movie_data_poster_image_view" >
 
     </include>
 </android.support.constraint.ConstraintLayout>

@@ -5,10 +5,15 @@
     <dimen name="act_movie_data_text_padding">12dp</dimen>
     <dimen name="act_movie_data_text_paddingLeft">12dp</dimen>
     <dimen name="act_movie_data_text_paddingRight">12dp</dimen>
+    <dimen name="act_movie_data_body_text_paddingLeft">20dp</dimen>
+    <dimen name="act_movie_data_body_text_paddingRight">20dp</dimen>
 
-    <dimen name="act_movie_data_trailer_poster_w">200dp</dimen>
-    <dimen name="act_movie_data_trailer_icon_size">32dp</dimen>
-    <dimen name="act_movie_data_trailert_font_size">20sp</dimen>
+    <dimen name="act_movie_data_trailer_poster_w">220dp</dimen>
+    <dimen name="act_movie_data_trailer_icon_size">24dp</dimen>
+    <dimen name="act_movie_data_trailer_font_size">20sp</dimen>
+    <dimen name="act_movie_data_trailer_list_padding">2dp</dimen>
+    <dimen name="act_movie_data_trailer_text_paddingLeft">4dp</dimen>
+    <dimen name="act_movie_data_trailer_text_paddingRight">4dp</dimen>
 
     <dimen name="act_movie_data_favorite_button_w">120dp</dimen>
     <dimen name="act_movie_data_favorite_button_h">60dp</dimen>

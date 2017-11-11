@@ -31,12 +31,16 @@
     </style>
     <style name="MovieDetailsBodyStyle" parent="MovieDetailsGeneralStyle">
         <item name="android:textSize">@dimen/act_movie_data_text_font_size</item>
+        <item name="android:paddingLeft">@dimen/act_movie_data_body_text_paddingLeft</item>
+        <item name="android:paddingRight">@dimen/act_movie_data_body_text_paddingRight</item>
     </style>
 
-    <style name="MovieDetailsTrailerListStyle" parent="AppTheme">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/act_movie_data_heading_font_size</item>
+    <style name="MovieDetailsTrailerListStyle" parent="MovieDetailsGeneralStyle">
+        <item name="android:paddingLeft">@dimen/act_movie_data_trailer_text_paddingLeft</item>
+        <item name="android:paddingRight">@dimen/act_movie_data_trailer_text_paddingRight</item>
+        <item name="android:textSize">@dimen/act_movie_data_trailer_font_size</item>
+        <item name="android:paddingTop">@dimen/act_movie_data_trailer_list_padding</item>
+        <item name="android:paddingBottom">@dimen/act_movie_data_trailer_list_padding</item>
     </style>
 
 </resources>
