@@ -166,7 +166,8 @@ public class MovieDetailsAdapter
         }
     }
 
-    //TODO implement FAVORITE
+
+
     private class MovieDetailsFavoriteButtonHandler implements
     MovieDetailsViewHolder.OnClickFavoriteButtonListener {
         @Override

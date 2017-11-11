@@ -149,19 +149,28 @@ public class MainActivity
             return;
         }
 
-        Bundle args = createCriterionBundle();
+        Bundle args = createArgs();
 
         initOrRestartLoader(LOADER_ID_FETCH_MOVIE_DATA_BY_CRITERION,
                 args, mFetchMovieDataLoaderCallbacks);
     }
 
-    private Bundle createCriterionBundle() {
+    private Bundle createArgs() {
         String criterion = mSharedPreference.getString(
                 getString(R.string.pref_sort_criterion_key),
                 getString(R.string.pref_sort_criterion_default_value));
         //Log.d(TAG, "createCriterionBundle -- criterion="+criterion);
+        int filterFlags = TheMovieDbJsonUtils.FLAGS_NO_FLAGS;
+        boolean showFavoritesOnly = mSharedPreference.getBoolean(
+                getString(R.string.pref_show_favorites_only_key),
+                getResources().getBoolean(R.bool.pref_show_favorites_only_defaultValue));
+
+        if(showFavoritesOnly)
+            filterFlags |= TheMovieDbJsonUtils.FLAGS_FILTER_FAVORITES_ONLY;
+
         Bundle args = new Bundle();
         args.putString(TheMovieDb_LoaderCallBacksEx_Listeners.STRING_PARAM, criterion);
+        args.putInt(TheMovieDb_LoaderCallBacksEx_Listeners.INTEGER_FLAG, filterFlags);
         return args;
     }
 

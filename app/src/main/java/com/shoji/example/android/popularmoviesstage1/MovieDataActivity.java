@@ -188,9 +188,8 @@ public class MovieDataActivity
     public void onClickFavoriteButton(Button button) {
         Log.d(TAG, "Clicked on favorite");
         updateUi(button);
-
-
     }
+
 
     @Override
     public void updateUi(Button button) {
@@ -206,10 +205,17 @@ public class MovieDataActivity
         }
     }
 
-    // TODO check somewhere to see if this movie is favorited.
-    private boolean isFavorite(MovieData movieData) {
-        //return (mMovieData!= null && mMovieData.getIsFavorite() == 1);
-        return ((int) (Math.random() * 2)) == 1; // testing
+    private boolean isFavorite() {
+        Intent intent = getIntent();
+        boolean result = false;
+
+        if(intent != null) {
+            MovieData fromIntentData = intent.getParcelableExtra(MOVIEDATA);
+            if(fromIntentData != null)
+                result = (fromIntentData.getIsFavorite() == 1 ? true : false);
+        }
+
+        return (result);
     }
     // [END] Favorite button implementation
 
@@ -269,7 +275,7 @@ public class MovieDataActivity
 
     @Override
     public void processFinishAll() {
-        mIsFavorite = isFavorite(mMovieData);
+        mIsFavorite = isFavorite();
 
         mMovieDetailsAdapter.setMovieData(mMovieData);
         mMovieDetailsAdapter.setTrailerData(mTrailerList);

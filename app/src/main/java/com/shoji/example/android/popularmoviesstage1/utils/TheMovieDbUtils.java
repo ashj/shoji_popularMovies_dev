@@ -76,7 +76,7 @@ public class TheMovieDbUtils {
             Log.e(TAG, e.getMessage());
         }
 
-        Log.v(TAG, "Built URI " + url);
+        //Log.v(TAG, "Built URI " + url);
 
         return url;
 

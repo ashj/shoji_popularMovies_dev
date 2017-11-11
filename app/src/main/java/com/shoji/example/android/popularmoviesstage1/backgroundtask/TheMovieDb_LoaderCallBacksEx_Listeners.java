@@ -12,7 +12,7 @@ public abstract class TheMovieDb_LoaderCallBacksEx_Listeners<Result>
 
 
     public static final String STRING_PARAM = "string_param";
-    public static final String INTEGER_FLAG = "string_FLAG";
+    public static final String INTEGER_FLAG = "string_flag";
 
     @Override
     public void onStartLoading(Context context) {}

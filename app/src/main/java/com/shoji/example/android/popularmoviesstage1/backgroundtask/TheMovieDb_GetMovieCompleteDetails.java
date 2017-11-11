@@ -115,7 +115,7 @@ public class TheMovieDb_GetMovieCompleteDetails {
 
         @Override
         public void onLoadFinished(Context context, MovieData result) {
-            Log.d(TAG, "Movie json:"+result);
+            //Log.d(TAG, "Movie json:"+result);
             mOnLoadFinishedHandler.processMovieData(result);
             initOrRestartLoader(LOADER_ID_FETCH_MOVIE_TRAILERS,
                     mArgs, mFetchMovieTrailersLoaderCallbacks);
