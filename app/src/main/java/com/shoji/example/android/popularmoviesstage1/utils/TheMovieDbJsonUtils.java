@@ -16,6 +16,10 @@ import java.util.ArrayList;
 public class TheMovieDbJsonUtils {
     private static final String TAG = TheMovieDbJsonUtils.class.getSimpleName();
 
+    public final static int FLAGS_NO_FLAGS = 0x0000;
+    public final static int FLAGS_FILTER_FAVORITES_ONLY = 0x0001;
+
+
     private static final String JSON_PAGE = "page";
 
     private static final String JSON_RESULTS = "results";
@@ -39,7 +43,7 @@ public class TheMovieDbJsonUtils {
     private static final String JSON_CONTENT = "content";
 
 
-    public static ArrayList<MovieData> parseMovieListJson(String jsonStr) {
+    public static ArrayList<MovieData> parseMovieListJson(String jsonStr, int flag) {
 
         ArrayList<MovieData> movieDataList = null;
         Log.d(TAG, "Starting parseMovieListJson");
@@ -55,10 +59,16 @@ public class TheMovieDbJsonUtils {
 
                 for (int i = 0; i < resultsArray.length(); i++) {
                     JSONObject movieJsonObject = resultsArray.getJSONObject(i);
-                    MovieData movieData = getSingleMovieData(movieJsonObject);
-                    movieDataList.add(movieData);
 
-                    //Log.d(TAG, "Parsed: " + movieData[i]);
+
+                    if(movieJsonObject.has(JSON_ID) &&
+                            shouldAddMovie(movieJsonObject.getString(JSON_ID), flag)) {
+
+                        MovieData movieData = getSingleMovieData(movieJsonObject);
+                        movieDataList.add(movieData);
+
+                        //Log.d(TAG, "Parsed: " + movieData[i]);
+                    }
                 }
             }
         } catch (JSONException jsone) {
@@ -81,7 +91,6 @@ public class TheMovieDbJsonUtils {
 
             if(movieJsonObject.has(JSON_ID)) {
                 movieData = getSingleMovieData(movieJsonObject);
-
                 movieData.setDuration(getString(movieJsonObject, JSON_DURATION));
             }
         } catch (JSONException jsone) {
@@ -186,6 +195,11 @@ public class TheMovieDbJsonUtils {
     }
 
     // TODO implement FAVORITE
+    private static boolean shouldAddMovie(String movieId, int flag) {
+        Log.d(TAG, "Movie list flag="+flag);
+
+        return true;
+    }
 
     private static boolean isMovieFavorite(String movieId) {
         //return (mMovieData!= null && mMovieData.getIsFavorite() == 1);

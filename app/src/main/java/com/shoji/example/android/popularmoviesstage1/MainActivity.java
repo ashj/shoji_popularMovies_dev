@@ -284,8 +284,8 @@ public class MainActivity
         }
 
         @Override
-        public ArrayList<MovieData> parseJsonString(String jsonString) {
-            return TheMovieDbJsonUtils.parseMovieListJson(jsonString);
+        public ArrayList<MovieData> parseJsonString(String jsonString, int flag) {
+            return TheMovieDbJsonUtils.parseMovieListJson(jsonString, flag);
         }
 
         @Override

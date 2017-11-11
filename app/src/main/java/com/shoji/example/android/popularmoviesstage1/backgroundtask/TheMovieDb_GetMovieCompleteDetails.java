@@ -21,6 +21,7 @@ public class TheMovieDb_GetMovieCompleteDetails {
     private final static int LOADER_ID_FETCH_MOVIE_TRAILERS = 10002;
     private final static int LOADER_ID_FETCH_MOVIE_REVIEWS = 10003;
 
+
     private Context mContext;
     private LoaderManager mLoaderManager;
 
@@ -108,7 +109,7 @@ public class TheMovieDb_GetMovieCompleteDetails {
         }
 
         @Override
-        public MovieData parseJsonString(String jsonString) {
+        public MovieData parseJsonString(String jsonString, int flag) {
             return TheMovieDbJsonUtils.parseSingleMovieData(jsonString);
         }
 
@@ -133,7 +134,7 @@ public class TheMovieDb_GetMovieCompleteDetails {
         }
 
         @Override
-        public ArrayList<YoutubeTrailerData> parseJsonString(String jsonString) {
+        public ArrayList<YoutubeTrailerData> parseJsonString(String jsonString, int flag) {
             return TheMovieDbJsonUtils.parseTrailerListJson(jsonString);
         }
 
@@ -159,7 +160,7 @@ public class TheMovieDb_GetMovieCompleteDetails {
         }
 
         @Override
-        public ArrayList<MovieReviewData> parseJsonString(String jsonString) {
+        public ArrayList<MovieReviewData> parseJsonString(String jsonString, int flag) {
             return TheMovieDbJsonUtils.parseMovieReviewJson(jsonString);
         }
 
