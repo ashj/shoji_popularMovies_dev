@@ -32,115 +32,29 @@
         app:layout_constraintGuide_percent="0.6" />
 
 
-    <ImageView
-        android:id="@+id/act_movie_data_poster_image_view"
-        android:layout_width="@dimen/act_movie_data_trailer_poster_w"
-        android:layout_height="300dp"
-
-        android:adjustViewBounds="true"
-        android:paddingLeft="@dimen/act_movie_data_text_padding"
-        android:paddingRight="@dimen/act_movie_data_text_padding"
-        android:paddingTop="@dimen/act_movie_data_text_padding"
-        app:layout_constraintStart_toStartOf="@+id/mddi_guideline_right"
-        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_title_tv"
-        tools:background="@color/colorPrimaryDark" />
-
-    <TextView
-        android:id="@+id/act_movie_data_release_date_label"
+    <include
+        layout="@layout/movie_data_details_include_primary_info_items"
+        android:id="@+id/act_movie_data_details_primary_info_items"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:paddingLeft="@dimen/act_movie_data_text_padding"
-        android:paddingRight="@dimen/act_movie_data_text_padding"
-        android:paddingTop="@dimen/act_movie_data_text_padding"
-        android:text="@string/release_date_label"
-        android:textSize="@dimen/act_movie_data_heading_font_size"
-        app:layout_constraintStart_toStartOf="@+id/mddi_guideline_middle"
-        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_title_tv" />
+        app:layout_constraintStart_toEndOf="@+id/mddi_guideline_right"
+        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_title_tv" >
 
-    <TextView
-        android:id="@+id/act_movie_data_release_date_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:paddingLeft="@dimen/act_movie_data_text_padding"
-        android:paddingRight="@dimen/act_movie_data_text_padding"
-        android:textSize="@dimen/act_movie_data_text_font_size"
-        app:layout_constraintStart_toStartOf="@+id/act_movie_data_release_date_label"
-        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_release_date_label"
-        tools:text="@string/tools_movie_release_date" />
-
-    <TextView
-        android:id="@+id/act_movie_data_average_vote_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/act_movie_data_text_padding"
-        android:paddingRight="@dimen/act_movie_data_text_padding"
-        android:paddingTop="@dimen/act_movie_data_text_padding"
-        android:text="@string/average_vote_label"
-        android:textSize="@dimen/act_movie_data_heading_font_size"
-        app:layout_constraintStart_toStartOf="@+id/act_movie_data_release_date_tv"
-        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_release_date_tv" />
-
-    <TextView
-        android:id="@+id/act_movie_data_average_vote_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/act_movie_data_text_padding"
-        android:paddingRight="@dimen/act_movie_data_text_padding"
-        android:textSize="@dimen/act_movie_data_text_font_size"
-        app:layout_constraintStart_toStartOf="@+id/act_movie_data_average_vote_label"
-        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_average_vote_label"
-        tools:text="@string/tools_movie_vote_average" />
-
-    <TextView
-        android:id="@+id/act_movie_data_duration_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/act_movie_data_text_padding"
-        android:paddingRight="@dimen/act_movie_data_text_padding"
-        android:paddingTop="@dimen/act_movie_data_text_padding"
-        android:text="@string/duration_label"
-        android:textSize="@dimen/act_movie_data_heading_font_size"
-        app:layout_constraintStart_toStartOf="@+id/act_movie_data_average_vote_tv"
-        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_average_vote_tv" />
-
-    <TextView
-        android:id="@+id/act_movie_data_duration_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/act_movie_data_text_padding"
-        android:paddingRight="@dimen/act_movie_data_text_padding"
-        android:textSize="@dimen/act_movie_data_text_font_size"
-        app:layout_constraintStart_toStartOf="@+id/act_movie_data_duration_label"
-        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_duration_label"
-        tools:text="@string/tools_movie_duration" />
-
-    <Button
-        android:id="@+id/act_movie_data_favorite_button"
-        android:layout_width="@dimen/act_movie_data_favorite_button_w"
-        android:layout_height="@dimen/act_movie_data_favorite_button_h"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:focusable="false"
-        android:textAlignment="center"
-        app:layout_constraintStart_toStartOf="@+id/act_movie_data_duration_tv"
-        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_duration_tv"
-        tools:text="@string/mark_as_favorite" />
+    </include>
 
 
     <TextView
         android:id="@+id/act_movie_data_overview_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:paddingLeft="@dimen/act_movie_data_text_padding"
         android:paddingRight="@dimen/act_movie_data_text_padding"
         android:paddingTop="@dimen/act_movie_data_text_padding"
         android:text="@string/overview_label"
         android:textSize="@dimen/act_movie_data_heading_font_size"
-        app:layout_constraintStart_toStartOf="@+id/act_movie_data_poster_image_view"
-        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_poster_image_view" />
+        app:layout_constraintStart_toStartOf="@+id/act_movie_data_details_primary_info_items"
+        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_details_primary_info_items" />
 
     <TextView
         android:id="@+id/act_movie_data_overview_tv"
