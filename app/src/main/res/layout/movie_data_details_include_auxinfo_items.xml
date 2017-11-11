@@ -55,6 +55,7 @@
         android:paddingTop="@dimen/act_movie_data_text_padding"
         android:focusable="false"
         android:textAlignment="center"
+        android:textSize="@dimen/act_movie_data_text_font_size"
         app:layout_constraintStart_toStartOf="@+id/act_movie_data_duration_tv"
         app:layout_constraintTop_toBottomOf="@+id/act_movie_data_duration_tv"
         tools:text="@string/mark_as_favorite" />
