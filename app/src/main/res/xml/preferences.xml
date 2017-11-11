@@ -6,4 +6,12 @@
         android:defaultValue="@string/pref_sort_criterion_default_value"
         android:entries="@array/pref_criterion_entries"
         android:entryValues="@array/pref_criterion_values" />
+
+    <CheckBoxPreference
+        android:title="@string/pref_show_favorites_only_label"
+        android:key="@string/pref_show_favorites_only_key"
+        android:defaultValue="@bool/pref_show_favorites_only_defaultValue"
+
+        />
+
 </PreferenceScreen>

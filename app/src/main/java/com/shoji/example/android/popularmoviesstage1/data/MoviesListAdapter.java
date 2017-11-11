@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import com.shoji.example.android.popularmoviesstage1.data.MoviesListViewHolder.MovieDataViewHolderOnClickListener;
 import com.shoji.example.android.popularmoviesstage1.R;
 
+import java.util.ArrayList;
+
 
 public class MoviesListAdapter
         extends RecyclerView.Adapter<MoviesListViewHolder>
@@ -16,7 +18,7 @@ public class MoviesListAdapter
     private final static String TAG = MoviesListAdapter.class.getSimpleName();
 
     private Context mContext;
-    private MovieData[] movieData;
+    private ArrayList<MovieData> movieData;
 
     private MovieDataAdapterOnClickHandler mMovieDataAdapterOnClickHandler;
 
@@ -33,9 +35,9 @@ public class MoviesListAdapter
         this.mMovieDataAdapterOnClickHandler = movieDataAdapterOnClickHandler;
     }
 
-    public MovieData[] getMovieData() { return movieData; }
+    public ArrayList<MovieData> getMovieData() { return movieData; }
 
-    public void setMovieData(MovieData[] movieData) {
+    public void setMovieData(ArrayList<MovieData> movieData) {
         this.movieData = movieData;
     }
 
@@ -55,7 +57,7 @@ public class MoviesListAdapter
 
     @Override
     public void onBindViewHolder(MoviesListViewHolder holder, int position) {
-        MovieData item = movieData[position];
+        MovieData item = movieData.get(position);
 
         holder.bindViewHolder(item);
     }
@@ -66,14 +68,14 @@ public class MoviesListAdapter
             return 0;
         }
 
-        return movieData.length;
+        return movieData.size();
     }
     /* [END] Methods to setup the RecyclerView.Adapter */
 
 
     @Override
     public void onClick(int position) {
-        MovieData movie = movieData[position];
+        MovieData movie = movieData.get(position);
         //Log.d(TAG, "Tapped on position="+position);
         //Log.d(TAG, "INFO: "+movie.toString());
         mMovieDataAdapterOnClickHandler.onClick(movie);

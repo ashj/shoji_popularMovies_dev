@@ -39,9 +39,9 @@ public class TheMovieDbJsonUtils {
     private static final String JSON_CONTENT = "content";
 
 
-    public static MovieData[] parseMovieListJson(String jsonStr) {
+    public static ArrayList<MovieData> parseMovieListJson(String jsonStr) {
 
-        MovieData[] movieData = null;
+        ArrayList<MovieData> movieDataList = null;
         Log.d(TAG, "Starting parseMovieListJson");
         try {
             JSONObject movieJson = new JSONObject(jsonStr);
@@ -51,12 +51,12 @@ public class TheMovieDbJsonUtils {
                 JSONArray resultsArray = movieJson.getJSONArray(JSON_RESULTS);
 
                 Log.d(TAG, "Total result in this page=" + resultsArray.length());
-                movieData = new MovieData[resultsArray.length()];
+                movieDataList = new ArrayList<>();
 
                 for (int i = 0; i < resultsArray.length(); i++) {
                     JSONObject movieJsonObject = resultsArray.getJSONObject(i);
-
-                    movieData[i] = getSingleMovieData(movieJsonObject);
+                    MovieData movieData = getSingleMovieData(movieJsonObject);
+                    movieDataList.add(movieData);
 
                     //Log.d(TAG, "Parsed: " + movieData[i]);
                 }
@@ -66,11 +66,11 @@ public class TheMovieDbJsonUtils {
             Log.e(TAG, jsone.getMessage());
         }
 
-        if(movieData == null)
+        if(movieDataList == null)
             Log.d(TAG, "movie data is null");
         else
-            Log.d(TAG, "size="+movieData.length);
-        return movieData;
+            Log.d(TAG, "size="+movieDataList.size());
+        return movieDataList;
 
     }
 
@@ -81,6 +81,7 @@ public class TheMovieDbJsonUtils {
 
             if(movieJsonObject.has(JSON_ID)) {
                 movieData = getSingleMovieData(movieJsonObject);
+
                 movieData.setDuration(getString(movieJsonObject, JSON_DURATION));
             }
         } catch (JSONException jsone) {
@@ -182,5 +183,12 @@ public class TheMovieDbJsonUtils {
             return jsonObject.getString(name);
         //Log.w(TAG, "jsonObject does not contain name="+name);
         return "";
+    }
+
+    // TODO implement FAVORITE
+
+    private static boolean isMovieFavorite(String movieId) {
+        //return (mMovieData!= null && mMovieData.getIsFavorite() == 1);
+        return ((int) (Math.random() * 2)) == 1; // testing
     }
 }

@@ -25,6 +25,8 @@ import com.shoji.example.android.popularmoviesstage1.data.MovieData;
 import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbJsonUtils;
 import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbUtils;
 
+import java.util.ArrayList;
+
 
 public class MainActivity
         extends TheMovieDbAppCompat
@@ -47,7 +49,7 @@ public class MainActivity
     private SharedPreferences mSharedPreference;
     private static boolean mRefreshMovieList;
 
-    private LoaderCallBacksEx<MovieData[]> mFetchMovieDataLoaderCallbacks;
+    private LoaderCallBacksEx<ArrayList<MovieData>> mFetchMovieDataLoaderCallbacks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +66,8 @@ public class MainActivity
             /* Restore movie data to save network usage */
             if(savedInstanceState.containsKey(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY)) {
                 Log.d(TAG, "savedInstanceState containsKey: "+SAVE_INSTANCE_STATE_MOVIE_DATA_KEY);
-                MovieData[] movieData = (MovieData[]) savedInstanceState.getParcelableArray(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY);
-                if(movieData != null && movieData.length != 0) {
+                ArrayList<MovieData> movieData = savedInstanceState.getParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY);
+                if(movieData != null && movieData.size() != 0) {
                     swapMovieData(movieData);
                     fetchMovieDataFromNetwork = false;
                     Log.d(TAG, "Restored movie data from "+SAVE_INSTANCE_STATE_MOVIE_DATA_KEY);
@@ -177,7 +179,7 @@ public class MainActivity
         startActivity(intent);
     }
 
-    private void swapMovieData(MovieData[] newMovieData) {
+    private void swapMovieData(ArrayList<MovieData> newMovieData) {
         //Log.d(TAG, "swapMovieData");
         mMoviesListAdapter.setMovieData(newMovieData);
         mMovieDataRecyclerView.setAdapter(mMoviesListAdapter);
@@ -189,7 +191,7 @@ public class MainActivity
         super.onSaveInstanceState(outState);
 
         outState.putParcelable(SAVE_INSTANCE_STATE_LIST_POSITION_KEY, mMovieDataRecyclerView.getLayoutManager().onSaveInstanceState());
-        outState.putParcelableArray(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY, mMoviesListAdapter.getMovieData());
+        outState.putParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY, mMoviesListAdapter.getMovieData());
     }
 
 
@@ -224,6 +226,10 @@ public class MainActivity
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(TextUtils.equals(key, getString(R.string.pref_sort_criterion_key)))
             mRefreshMovieList = true;
+        else if(TextUtils.equals(key, getString(R.string.pref_show_favorites_only_key))) {
+            mRefreshMovieList = true;
+            Log.d(TAG, "Show favorites setting changed");
+        }
     }
 
     @Override
@@ -255,7 +261,7 @@ public class MainActivity
 
     // [START] Implement fetch, parse for json and data processing
     private class MovieDataResultListener
-            extends TheMovieDb_LoaderCallBacksEx_Listeners<MovieData[]>
+            extends TheMovieDb_LoaderCallBacksEx_Listeners<ArrayList<MovieData>>
     {
         private final String TAG = MovieDataResultListener.class.getSimpleName();
 
@@ -278,13 +284,13 @@ public class MainActivity
         }
 
         @Override
-        public MovieData[] parseJsonString(String jsonString) {
+        public ArrayList<MovieData> parseJsonString(String jsonString) {
             return TheMovieDbJsonUtils.parseMovieListJson(jsonString);
         }
 
         @Override
-        public void onLoadFinished(Context context, MovieData[] result) {
-            if(result == null || result.length == 0) {
+        public void onLoadFinished(Context context, ArrayList<MovieData> result) {
+            if(result == null || result.size() == 0) {
                 textView.setText(R.string.error_null_json_returned);
                 mLoadingMovieDataProgressBar.setVisibility(View.INVISIBLE);
             }
