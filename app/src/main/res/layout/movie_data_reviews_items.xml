@@ -21,6 +21,6 @@
         tools:text="@string/tools_review_content"
         style="@style/MovieReviewsBodyStyle" />
 
-
+    <View style="@style/Divider"/>
 
 </LinearLayout>
