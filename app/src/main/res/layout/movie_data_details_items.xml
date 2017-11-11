@@ -45,37 +45,22 @@
 
     <TextView
         android:id="@+id/act_movie_data_overview_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:paddingLeft="@dimen/act_movie_data_text_padding"
-        android:paddingRight="@dimen/act_movie_data_text_padding"
-        android:paddingTop="@dimen/act_movie_data_text_padding"
+        style="@style/MovieDetailsLabelStyle"
         android:text="@string/overview_label"
-        android:textSize="@dimen/act_movie_data_heading_font_size"
         app:layout_constraintStart_toStartOf="@+id/act_movie_data_details_primary_info_items"
         app:layout_constraintTop_toBottomOf="@+id/act_movie_data_details_primary_info_items" />
 
     <TextView
         android:id="@+id/act_movie_data_overview_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/act_movie_data_text_padding"
-        android:paddingRight="@dimen/act_movie_data_text_padding"
-        android:textSize="@dimen/act_movie_data_text_font_size"
+        style="@style/MovieDetailsBodyStyle"
         app:layout_constraintStart_toStartOf="@+id/act_movie_data_overview_label"
         app:layout_constraintTop_toBottomOf="@+id/act_movie_data_overview_label"
         tools:text="@string/tools_movie_overview" />
 
     <TextView
         android:id="@+id/act_movie_data_trailer_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/act_movie_data_text_padding"
-        android:paddingRight="@dimen/act_movie_data_text_padding"
-        android:paddingTop="@dimen/act_movie_data_text_padding"
+        style="@style/MovieDetailsLabelStyle"
         android:text="@string/trailer_other_label"
-        android:textSize="@dimen/act_movie_data_heading_font_size"
         app:layout_constraintStart_toStartOf="@+id/act_movie_data_overview_tv"
         app:layout_constraintTop_toBottomOf="@+id/act_movie_data_overview_tv"
         />

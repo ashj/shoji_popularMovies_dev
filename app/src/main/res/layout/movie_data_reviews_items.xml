@@ -6,15 +6,11 @@
 
     <TextView
         android:id="@+id/movie_review_author_tv"
-        android:textSize="@dimen/act_movie_data_heading_font_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        style="@style/MovieDetailsLabelStyle"/>
 
     <TextView
         android:id="@+id/movie_review_content_tv"
-        android:textSize="@dimen/act_movie_data_text_font_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        style="@style/MovieDetailsBodyStyle" />
 
 
 
