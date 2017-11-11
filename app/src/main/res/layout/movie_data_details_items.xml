@@ -12,9 +12,14 @@
         android:id="@+id/act_movie_data_title_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/act_movie_data_text_paddingLeft"
-        android:paddingRight="@dimen/act_movie_data_text_paddingRight"
-        android:textSize="@dimen/act_movie_data_heading_font_size"
+        android:paddingStart="@dimen/act_movie_data_text_paddingLeft"
+        android:paddingEnd="@dimen/act_movie_data_text_paddingRight"
+        android:paddingTop="@dimen/act_movie_data_movie_title_paddingTop"
+        android:paddingBottom="@dimen/act_movie_data_movie_title_paddingBottom"
+        android:textSize="@dimen/act_movie_data_movie_title_font_size"
+        android:gravity="center_vertical"
+        android:background="@color/act_movie_data_movie_title_bgcolor"
+        android:textColor="@color/act_movie_data_movie_title_txtcolor"
         tools:text="@string/tools_movie_tile" />
 
 

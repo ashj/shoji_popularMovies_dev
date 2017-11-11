@@ -3,4 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="act_movie_data_movie_title_bgcolor">@color/colorPrimaryDark</color>
+    <color name="act_movie_data_movie_title_txtcolor">@android:color/white</color>
 </resources>

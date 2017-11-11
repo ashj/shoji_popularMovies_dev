@@ -18,6 +18,9 @@
     <dimen name="act_movie_data_favorite_button_w">140dp</dimen>
     <dimen name="act_movie_data_favorite_button_h">80dp</dimen>
 
+    <dimen name="act_movie_data_movie_title_paddingTop">16dp</dimen>
+    <dimen name="act_movie_data_movie_title_paddingBottom">@dimen/act_movie_data_movie_title_paddingTop</dimen>
+
     <dimen name="act_main_progressbar_dimen">64dp</dimen>
 
     <dimen name="act_movie_data_recyclerView_paddingTop">6dp</dimen>
@@ -26,5 +29,7 @@
     <dimen name="act_movie_data_heading_font_size">16sp</dimen>
     <dimen name="act_movie_data_text_font_size">14sp</dimen>
     <dimen name="act_movie_data_trailer_font_size">14sp</dimen>
+    <dimen name="act_movie_data_movie_title_font_size">20sp</dimen>
+
 
 </resources>
