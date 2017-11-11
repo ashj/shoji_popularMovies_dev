@@ -18,6 +18,11 @@
     <string name="pref_sort_by_top_rated_entry">Sort by top rated</string>
     <string name="pref_sort_by_top_rated_value" translatable="false">top-rated</string>
 
+    <string name="tools_movie_tile">Movie Title</string>
+    <string name="tools_movie_release_date">2000-00-00</string>
+    <string name="tools_movie_vote_average">9.9/10</string>
+    <string name="tools_movie_duration">999min</string>
+    <string name="tools_movie_overview">Lorem Ipsum</string>
 
     <string name="average_vote_label">Vote Average</string>
     <string name="average_vote_formatted_value"><xliff:g>%1$s</xliff:g>/<xliff:g>%2$s</xliff:g></string>
@@ -26,6 +31,13 @@
     <string name="release_date_label">Release Date</string>
     <string name="duration_label">Duration</string>
     <string name="duration_formatted_value"><xliff:g>%1$s</xliff:g>min</string>
+
+    <string name="trailer_one_label">Trailer</string>
+    <string name="trailer_other_label">Trailers</string>
+    <plurals name="trailer_plurals_label">
+        <item quantity="one">@string/trailer_one_label</item>
+        <item quantity="other">@string/trailer_other_label</item>
+    </plurals>
 
     <string name="mark_as_favorite">\u2606 MARK AS\nFAVORITE</string>
     <string name="unmark_as_favorite">\u2605 UNMARK AS\nFAVORITE</string>

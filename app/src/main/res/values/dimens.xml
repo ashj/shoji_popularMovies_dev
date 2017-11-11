@@ -4,6 +4,7 @@
     <dimen name="act_movie_data_text_font_size">16sp</dimen>
     <dimen name="act_movie_data_text_padding">12dp</dimen>
 
+    <dimen name="act_movie_data_trailer_poster_w">200dp</dimen>
     <dimen name="act_movie_data_trailer_icon_size">32dp</dimen>
 
     <dimen name="act_movie_data_favorite_button_w">120dp</dimen>
