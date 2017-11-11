@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryLight">#C5CAE9</color>color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
@@ -8,4 +9,10 @@
 
     <color name="act_movie_data_movie_title_bgcolor">@color/colorPrimaryDark</color>
     <color name="act_movie_data_movie_title_txtcolor">@android:color/white</color>
+
+    <!-- Colors for the selector of trailers list -->
+    <color name="colorTrailerPressed">@color/colorPrimaryLight</color>
+    <color name="colorTrailerActivated">@color/colorPrimaryLight</color>
+    <color name="colorTrailerSelected">@color/colorPrimaryLight</color>
+    <color name="colorTrailerDefault">@android:color/background_light</color>
 </resources>

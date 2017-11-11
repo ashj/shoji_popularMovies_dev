@@ -11,7 +11,7 @@
     <dimen name="act_movie_data_trailer_icon_size">20dp</dimen>
 
 
-    <dimen name="act_movie_data_trailer_list_padding">2dp</dimen>
+    <dimen name="act_movie_data_trailer_list_padding">4dp</dimen>
     <dimen name="act_movie_data_trailer_text_paddingLeft">4dp</dimen>
     <dimen name="act_movie_data_trailer_text_paddingRight">@dimen/act_movie_data_trailer_text_paddingLeft</dimen>
 
