@@ -161,16 +161,9 @@ public class MainActivity
                 getString(R.string.pref_sort_criterion_default_value));
         //Log.d(TAG, "createCriterionBundle -- criterion="+criterion);
         int filterFlags = TheMovieDbJsonUtils.FLAGS_NO_FLAGS;
-        boolean showFavoritesOnly = mSharedPreference.getBoolean(
-                getString(R.string.pref_show_favorites_only_key),
-                getResources().getBoolean(R.bool.pref_show_favorites_only_defaultValue));
-
-        if(showFavoritesOnly)
-            filterFlags |= TheMovieDbJsonUtils.FLAGS_FILTER_FAVORITES_ONLY;
 
         Bundle args = new Bundle();
         args.putString(TheMovieDb_LoaderCallBacksEx_Listeners.STRING_PARAM, criterion);
-        args.putInt(TheMovieDb_LoaderCallBacksEx_Listeners.INTEGER_FLAG, filterFlags);
         return args;
     }
 
@@ -235,10 +228,6 @@ public class MainActivity
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(TextUtils.equals(key, getString(R.string.pref_sort_criterion_key)))
             mRefreshMovieList = true;
-        else if(TextUtils.equals(key, getString(R.string.pref_show_favorites_only_key))) {
-            mRefreshMovieList = true;
-            Log.d(TAG, "Show favorites setting changed");
-        }
     }
 
     @Override

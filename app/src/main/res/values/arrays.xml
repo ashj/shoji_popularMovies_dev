@@ -4,10 +4,12 @@
     <array name="pref_criterion_entries">
         <item>@string/pref_sort_by_popularity_entry</item>
         <item>@string/pref_sort_by_top_rated_entry</item>
+        <item>@string/pref_sort_by_favorites_only_entry</item>
     </array>
     <array name="pref_criterion_values">
         <item>@string/pref_sort_by_popularity_value</item>
         <item>@string/pref_sort_by_top_rated_value</item>
+        <item>@string/pref_sort_by_favorites_only_value</item>
     </array>
 
 </resources>

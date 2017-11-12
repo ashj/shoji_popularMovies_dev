@@ -2,8 +2,10 @@ package com.shoji.example.android.popularmoviesstage1.backgroundtask;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.shoji.example.android.popularmoviesstage1.R;
 import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbJsonUtils;
 
 public abstract class TheMovieDb_LoaderCallBacksEx_Listeners<Result>
@@ -12,7 +14,6 @@ public abstract class TheMovieDb_LoaderCallBacksEx_Listeners<Result>
 
 
     public static final String STRING_PARAM = "string_param";
-    public static final String INTEGER_FLAG = "string_flag";
 
     @Override
     public void onStartLoading(Context context) {}
@@ -22,23 +23,27 @@ public abstract class TheMovieDb_LoaderCallBacksEx_Listeners<Result>
         Log.d(TAG, "Called");
         Result result = null;
         String jsonString = null;
+        int flag = TheMovieDbJsonUtils.FLAGS_NO_FLAGS;
 
         // Fetch json string.
         if (args != null && args.containsKey(STRING_PARAM)) {
             String param = args.getString(STRING_PARAM);
 
             if(param != null && param.length() != 0) {
+                String favoriteOnly = context.getString(R.string.pref_sort_by_favorites_only_value);
+                if(TextUtils.equals(param, favoriteOnly)) {
+                    flag |= TheMovieDbJsonUtils.FLAGS_FILTER_FAVORITES_ONLY;
+                    param = context.getString(R.string.pref_sort_criterion_default_value);
+                }
+
                 jsonString = fetchJsonString(param);
+
+
             }
         }
         // Parse jsonString
         if(jsonString != null && jsonString.length() != 0) {
-            int flag = TheMovieDbJsonUtils.FLAGS_NO_FLAGS;
-
-            if(args != null && args.containsKey(INTEGER_FLAG))
-                flag = args.getInt(INTEGER_FLAG);
-
-            result = parseJsonString(jsonString, flag);
+                result = parseJsonString(jsonString, flag);
         }
 
         return result;
