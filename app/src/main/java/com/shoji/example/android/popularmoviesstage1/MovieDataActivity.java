@@ -24,6 +24,7 @@ import com.shoji.example.android.popularmoviesstage1.data.MovieData;
 import com.shoji.example.android.popularmoviesstage1.data.MovieReviewData;
 import com.shoji.example.android.popularmoviesstage1.data.MovieDetailsAdapter;
 import com.shoji.example.android.popularmoviesstage1.data.YoutubeTrailerData;
+import com.shoji.example.android.popularmoviesstage1.database.FavoriteMoviesContract;
 import com.shoji.example.android.popularmoviesstage1.utils.UrlStringMaker;
 
 import java.util.ArrayList;
@@ -62,6 +63,8 @@ public class MovieDataActivity
 
     private static Menu mMenu;
 
+    private String mMovieId;
+
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -74,7 +77,10 @@ public class MovieDataActivity
 
         mProgressBar = (ProgressBar) findViewById(R.id.act_movie_data_pb_loading_progress);
 
-        createBackgroundTask(intent);
+        mMovieData = intent.getParcelableExtra(MOVIEDATA);
+        mMovieId = mMovieData.getId();
+
+        createBackgroundTask();
 
         createMovieDataRecyclerView();
 
@@ -116,11 +122,10 @@ public class MovieDataActivity
         mMovieTrailerRecyclerView.setAdapter(mMovieDetailsAdapter);
     }
 
-    private void createBackgroundTask(Intent intent) {
-        MovieData movieData = intent.getParcelableExtra(MOVIEDATA);
-        Bundle args = new Bundle();
+    private void createBackgroundTask() {
+         Bundle args = new Bundle();
         args.putString(TheMovieDb_LoaderCallBacksEx_Listeners.STRING_PARAM,
-                movieData.getId());
+                mMovieId);
 
         TheMovieDb_GetMovieCompleteDetails.TheMovieDbOnLoadFinishedLister processResults = this;
         mFetchMovieCompleteDetailsTasker = new TheMovieDb_GetMovieCompleteDetails(this,
@@ -199,6 +204,21 @@ public class MovieDataActivity
     @Override
     public void onClickFavoriteButton(Button button) {
         Log.d(TAG, "Clicked on favorite");
+        if (mIsFavorite == true) {
+            /* This will unmark the movie*/
+            Log.d(TAG, "Change to on");
+            button.setBackground(getResources().getDrawable(android.R.drawable.btn_star_big_on));
+
+            //getContentResolver().delete(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
+            //        "_id="+mM)
+
+            mIsFavorite = false;
+        } else {
+            /* This will mark the movie */
+            Log.d(TAG, "Change to off");
+            button.setBackground(getResources().getDrawable(android.R.drawable.btn_star_big_off));
+            mIsFavorite = true;
+        }
         updateUi(button);
     }
 
@@ -209,11 +229,11 @@ public class MovieDataActivity
         if (mIsFavorite == true) {
             Log.d(TAG, "Change to on");
             button.setBackground(getResources().getDrawable(android.R.drawable.btn_star_big_on));
-            mIsFavorite = false;
+            //mIsFavorite = false;
         } else {
             Log.d(TAG, "Change to off");
             button.setBackground(getResources().getDrawable(android.R.drawable.btn_star_big_off));
-            mIsFavorite = true;
+            //mIsFavorite = true;
         }
     }
 
