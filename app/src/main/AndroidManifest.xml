@@ -33,6 +33,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        <provider
+            android:name="com.shoji.example.android.popularmoviesstage1.database.FavoriteMoviesContentProvider"
+            android:authorities="com.shoji.example.android.popularmoviesstage1"
+            android:exported="false" />
     </application>
 
 </manifest>
