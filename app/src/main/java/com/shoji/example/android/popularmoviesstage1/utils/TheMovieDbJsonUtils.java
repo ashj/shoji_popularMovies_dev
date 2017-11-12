@@ -44,9 +44,8 @@ public class TheMovieDbJsonUtils {
 
 
     public static ArrayList<MovieData> parseMovieListJson(String jsonStr, int flag) {
-
         ArrayList<MovieData> movieDataList = null;
-        Log.d(TAG, "Starting parseMovieListJson");
+        //Log.d(TAG, "Starting parseMovieListJson");
         try {
             JSONObject movieJson = new JSONObject(jsonStr);
 
@@ -54,19 +53,17 @@ public class TheMovieDbJsonUtils {
 
                 JSONArray resultsArray = movieJson.getJSONArray(JSON_RESULTS);
 
-                Log.d(TAG, "Total result in this page=" + resultsArray.length());
+                //Log.d(TAG, "Total result in this page=" + resultsArray.length());
                 movieDataList = new ArrayList<>();
 
                 for (int i = 0; i < resultsArray.length(); i++) {
                     JSONObject movieJsonObject = resultsArray.getJSONObject(i);
 
+                    // filter movies to add according to filter flag value.
                     MovieData movieData = getSingleMovieData(movieJsonObject);
                     if(movieJsonObject.has(JSON_ID) &&
-                            shouldAddMovie(movieData, flag)) {
-
-
+                        shouldAddMovie(movieData, flag)) {
                         movieDataList.add(movieData);
-
                         //Log.d(TAG, "Parsed: " + movieData);
                     }
                 }
@@ -76,10 +73,10 @@ public class TheMovieDbJsonUtils {
             Log.e(TAG, jsone.getMessage());
         }
 
-        if(movieDataList == null)
-            Log.d(TAG, "movie data is null");
-        else
-            Log.d(TAG, "size="+movieDataList.size());
+        //if(movieDataList == null)
+        //    Log.d(TAG, "movie data is null");
+        //else
+        //    Log.d(TAG, "size="+movieDataList.size());
         return movieDataList;
 
     }
@@ -196,7 +193,7 @@ public class TheMovieDbJsonUtils {
 
     // [START] filter movie list according to flag
     private static boolean shouldAddMovie(MovieData movieData, int flag) {
-        Log.d(TAG, "Movie list flag="+flag);
+        //Log.d(TAG, "Movie list flag="+flag);
         boolean result = true;
 
         if( (flag & FLAGS_FILTER_FAVORITES_ONLY) == FLAGS_FILTER_FAVORITES_ONLY ) {
@@ -208,12 +205,12 @@ public class TheMovieDbJsonUtils {
             else {
                 result = isMovieFavorite(movieId);
                 movieData.setIsFavorite( (result==true) ? 1 : 0 );
-                Log.d(TAG, "Movie isFavorite set to:"+movieData.getIsFavorite());
+                //Log.d(TAG, "Movie isFavorite set to:"+movieData.getIsFavorite());
             }
         }
-        else {
-            Log.d(TAG, "NO FILTER");
-        }
+        //else {
+        //    Log.d(TAG, "NO FILTER");
+        //}
 
         return result;
     }
