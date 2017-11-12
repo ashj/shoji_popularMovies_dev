@@ -105,7 +105,28 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        final SQLiteDatabase db = mFavoriteMoviesDbHelper.getWritableDatabase();
+        int numRowsDeleted = 0;
+
+        if (null == selection) selection = "1";
+
+        int match = sUriMatcher.match(uri);
+        switch (match) {
+            case FAVORITES:
+                numRowsDeleted = db.delete(
+                        FavoriteMoviesEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs);
+                break;
+
+            default:
+                throw new UnsupportedOperationException("Unknown URI:" + uri);
+        }
+        if(numRowsDeleted > 0)
+            getContext().getContentResolver().notifyChange(uri, null);
+
+
+        return numRowsDeleted;
     }
 
     @Override
@@ -163,7 +184,7 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
             default:
                 break;
         }
-        
+
         if (numRowsInserted != NO_MATCH) {
             getContext().getContentResolver().notifyChange(uri, null);
             return numRowsInserted;
