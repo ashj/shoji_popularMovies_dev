@@ -110,6 +110,26 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        final SQLiteDatabase db = mFavoriteMoviesDbHelper.getWritableDatabase();
+        int numRowsUpdated = 0;
+
+        int match = sUriMatcher.match(uri);
+        switch (match) {
+            case FAVORITES_WITH_ID:
+                String id = uri.getPathSegments().get(1);
+                numRowsUpdated = db.update(
+                        FavoriteMoviesEntry.TABLE_NAME,
+                        values,
+                        "_id=?",
+                        new String[] { id });
+                break;
+
+            default:
+                throw new UnsupportedOperationException("Unknown URI:" + uri);
+        }
+        if(numRowsUpdated > 0)
+            getContext().getContentResolver().notifyChange(uri, null);
+
+        return numRowsUpdated;
     }
 }
