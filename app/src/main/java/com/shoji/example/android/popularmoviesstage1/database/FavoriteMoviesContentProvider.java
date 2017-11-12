@@ -132,4 +132,43 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
 
         return numRowsUpdated;
     }
+
+    @Override
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+        final SQLiteDatabase db = mFavoriteMoviesDbHelper.getWritableDatabase();
+        final int NO_MATCH = -1;
+        int numRowsInserted = NO_MATCH;
+
+
+        int match = sUriMatcher.match(uri);
+        switch (match) {
+            case FAVORITES:
+                numRowsInserted = 0;
+
+                try {
+                    for (ContentValues value : values) {
+                        long id = db.insert(FavoriteMoviesEntry.TABLE_NAME,
+                                null,
+                                value);
+
+                        if (id != -1)
+                            numRowsInserted++;
+
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                break;
+            default:
+                break;
+        }
+        
+        if (numRowsInserted != NO_MATCH) {
+            getContext().getContentResolver().notifyChange(uri, null);
+            return numRowsInserted;
+        }
+
+        return super.bulkInsert(uri, values);
+    }
 }
