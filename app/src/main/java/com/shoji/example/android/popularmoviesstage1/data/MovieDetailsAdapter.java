@@ -43,6 +43,8 @@ public class MovieDetailsAdapter
     private MovieTrailerAdapterOnClickHandler mMovieTrailerAdapterOnClickHandler;
     private MovieFavoriteAdapterOnClickHandler mMovieFavoriteAdapterOnClickHandler;
 
+    MovieDetailsViewHolder mMovieDataHolder;
+
     public interface MovieFavoriteAdapterOnClickHandler {
         void onClickFavoriteButton(Button button);
         void updateUi(Button button);
@@ -141,6 +143,8 @@ public class MovieDetailsAdapter
                 //Log.d(TAG, "Binding the movie details");
                 MovieDetailsViewHolder movieDataHolder = (MovieDetailsViewHolder) holder;
                 MovieDetailsFavoriteButtonHandler favButtonHandler = new MovieDetailsFavoriteButtonHandler();
+                mMovieDataHolder = movieDataHolder;
+
                 movieDataHolder.bindViewHolder(mContext, mMovieData, favButtonHandler);
                 break;
 
@@ -155,8 +159,8 @@ public class MovieDetailsAdapter
                 YoutubeTrailerData trailerItem = mTrailerData.get(listPosition);
                 //Log.d(TAG, "got item i="+position+". value= "+trailerItem.toString());
                 trailerViewHolder.bindViewHolder(trailerItem);
-                if(listPosition == 0) {
-                    trailerViewHolder.showTitleLabel(mTrailerData.size());
+                if(listPosition == 0 && mMovieDataHolder != null) {
+                    mMovieDataHolder.showReviewTitleLabel(mTrailerData.size());
                 }
 
                 break;

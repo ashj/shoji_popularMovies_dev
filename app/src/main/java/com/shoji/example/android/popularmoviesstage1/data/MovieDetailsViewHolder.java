@@ -25,6 +25,8 @@ public class MovieDetailsViewHolder
 
     private Button mFavoriteButton;
 
+    private TextView mReviewsLabel;
+
     private OnClickFavoriteButtonListener mOnClickFavoriteButtonHandler;
 
     public interface OnClickFavoriteButtonListener {
@@ -46,6 +48,7 @@ public class MovieDetailsViewHolder
         mReleaseDate = itemView.findViewById(R.id.act_movie_data_release_date_tv);
         mDuration = itemView.findViewById(R.id.act_movie_data_duration_tv);
         mFavoriteButton = itemView.findViewById(R.id.act_movie_data_favorite_button);
+        mReviewsLabel = itemView.findViewById(R.id.act_movie_data_trailer_label);
     }
 
 
@@ -80,6 +83,13 @@ public class MovieDetailsViewHolder
                 mOnClickFavoriteButtonHandler.OnClick(view);
             }
         };
+    }
+
+    public void showReviewTitleLabel(int numItems) {
+        if(numItems > 0) {
+            mReviewsLabel.setText(mContext.getResources().getQuantityString(R.plurals.trailer_plurals_label, numItems));
+            mReviewsLabel.setVisibility(View.VISIBLE);
+        }
     }
 
 }
