@@ -10,7 +10,7 @@
     <dimen name="act_movie_data_details_paddingTop">10dp</dimen>
 
     <dimen name="act_movie_data_trailer_poster_w">180dp</dimen>
-    <dimen name="act_movie_data_trailer_icon_size">20dp</dimen>
+    <dimen name="act_movie_data_trailer_icon_size">24dp</dimen>
 
 
     <dimen name="act_movie_data_trailer_list_padding">4dp</dimen>
@@ -32,7 +32,7 @@
     <!-- fonts size -->
     <dimen name="act_movie_data_heading_font_size">16sp</dimen>
     <dimen name="act_movie_data_text_font_size">14sp</dimen>
-    <dimen name="act_movie_data_trailer_font_size">14sp</dimen>
+    <dimen name="act_movie_data_trailer_font_size">16sp</dimen>
     <dimen name="act_movie_data_movie_title_font_size">20sp</dimen>
 
 
