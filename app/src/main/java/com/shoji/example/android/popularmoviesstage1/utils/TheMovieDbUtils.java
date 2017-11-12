@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.shoji.example.android.popularmoviesstage1.BuildConfig;
+import com.shoji.example.android.popularmoviesstage1.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -107,7 +108,11 @@ public class TheMovieDbUtils {
 
     public static void loadImage(Context context, String posterPath, int posterSize, ImageView imageView) {
         String url = TheMovieDbUtils.getPosterURL(posterPath, posterSize);
-        Picasso.with(context).load(url).into(imageView);
+        Picasso.with(context)
+                .load(url)
+                .placeholder(R.drawable.ic_highlight_on)
+                .error(R.drawable.ic_highlight_off)
+                .into(imageView);
     }
 
     public static String getMovieDataById(String id) {
