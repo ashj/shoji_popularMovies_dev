@@ -7,9 +7,13 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_GetMovieCompleteDetails;
@@ -53,6 +57,8 @@ public class MovieDataActivity
 
 
     private boolean mIsFavorite;
+
+    private static Menu mMenu;
 
 
     @Override
@@ -282,6 +288,69 @@ public class MovieDataActivity
         mMovieDetailsAdapter.setReviewData(mReviewList);
 
         mMovieTrailerRecyclerView.setAdapter(mMovieDetailsAdapter);
+
+        createShareTrailer();
     }
     // [END] Results processing for each step
+
+    // [START] Activity menu bar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "Setting menu");
+        getMenuInflater().inflate(R.menu.movie_data_activity_menu_, menu);
+        mMenu = menu;
+        createShareTrailer(); // temp
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.movie_data_action_refresh_movie_list:
+                redoFetchMovieData();
+                return true;
+
+            default: break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void createShareTrailer() {
+        ArrayList<YoutubeTrailerData> trailerList = null;
+        YoutubeTrailerData trailerData = null;
+        Log.d(TAG, "createShareTrailer");
+        if (mMenu == null) return;
+
+        if(mMovieDetailsAdapter != null)
+            trailerList = mMovieDetailsAdapter.getTrailerData();
+        if(trailerList != null && trailerList.size() != 0)
+            trailerData = trailerList.get(0);
+        if(trailerData != null) {
+
+
+            String trailerUrlString = UrlStringMaker.createYoutubeUrlString(trailerData.getKey());
+            Intent intent = ShareCompat.IntentBuilder.from(this)
+                    .setType("text/plain")
+                    .setChooserTitle(trailerUrlString)
+                    .setText(trailerUrlString)
+                    .getIntent();
+
+            MenuItem menuItem = mMenu.findItem(R.id.movie_data_action_share_first_trailer);
+            menuItem.setVisible(true);
+            menuItem.setIntent(intent);
+        }
+    }
+
+    private void redoFetchMovieData() {
+        /* Drop any previous Result then fetch the data. */
+        Log.d(TAG, "Calling redoFetchMovieData()");
+        mMovieDetailsAdapter.setMovieData(null);
+        mMovieDetailsAdapter.setTrailerData(null);
+        mMovieDetailsAdapter.setReviewData(null);
+        mMovieTrailerRecyclerView.setAdapter(mMovieDetailsAdapter);
+        mFetchMovieCompleteDetailsTasker.resetResults();
+        doFetchMovieTrailersAndReview();
+    }
+    // [END] Activity menu bar
 }

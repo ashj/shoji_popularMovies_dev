@@ -173,4 +173,10 @@ public class TheMovieDb_GetMovieCompleteDetails {
         }
 
     }
+
+    public void resetResults() {
+        mFetchMovieDataByIdLoaderCallbacks.resetResult();
+        mFetchMovieTrailersLoaderCallbacks.resetResult();
+        mFetchMovieReviewsLoaderCallbacks.resetResult();
+    }
 }

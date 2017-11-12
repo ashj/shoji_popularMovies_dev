@@ -5,6 +5,8 @@
 
     <string name="refresh_title">Refresh</string>
 
+    <string name="share_trailer">Share trailer</string>
+
     <!-- preferences -->
     <string name="preferences_title">Settings</string>
     <string name="pref_sort_criterion_title">Movie listing</string>

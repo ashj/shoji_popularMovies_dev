@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/movie_data_action_share_first_trailer"
+        android:title="@string/share_trailer"
+        android:contentDescription="@string/share_trailer"
+        android:icon="@android:drawable/ic_menu_share"
+        android:orderInCategory="1"
+        android:visible="false"
+        app:showAsAction="always"
+        />
+
+    <item android:id="@+id/movie_data_action_refresh_movie_list"
+        android:title="@string/refresh_title"
+        android:orderInCategory="2"
+        app:showAsAction="never"
+        />
+
+</menu>
