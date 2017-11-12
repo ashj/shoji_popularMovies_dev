@@ -16,5 +16,5 @@
     <color name="colorTrailerPressed">@color/colorPrimaryLight</color>
     <color name="colorTrailerActivated">@color/colorPrimaryLight</color>
     <color name="colorTrailerSelected">@color/colorPrimaryLight</color>
-    <color name="colorTrailerDefault">@android:color/background_light</color>
+    <color name="colorTrailerDefault">@android:color/transparent</color>
 </resources>
