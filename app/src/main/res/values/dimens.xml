@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="act_movie_data_poster_w">400dp</dimen>
+    <dimen name="act_movie_data_poster_h">350dp</dimen>
+
     <dimen name="act_movie_data_text_paddingTop">6dp</dimen>
     <dimen name="act_movie_data_text_paddingLeft">6dp</dimen>
     <dimen name="act_movie_data_text_paddingRight">@dimen/act_movie_data_text_paddingLeft</dimen>
