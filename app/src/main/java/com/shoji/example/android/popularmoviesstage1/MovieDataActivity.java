@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_GetMovieCompleteDetails;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_LoaderCallBacksEx_Listeners;
@@ -39,6 +40,7 @@ public class MovieDataActivity
 
     public static final String MOVIEDATA = "movie_data";
 
+    private ProgressBar mProgressBar;
     private RecyclerView mMovieTrailerRecyclerView;
     private MovieDetailsAdapter mMovieDetailsAdapter;
 
@@ -69,6 +71,8 @@ public class MovieDataActivity
         Intent intent = getIntent();
         if(intent == null || !intent.hasExtra(MOVIEDATA))
             return;
+
+        mProgressBar = (ProgressBar) findViewById(R.id.act_movie_data_pb_loading_progress);
 
         createBackgroundTask(intent);
 
@@ -129,8 +133,10 @@ public class MovieDataActivity
     private void doFetchMovieTrailersAndReview() {
 
         if(!arePreconditionsValid(R.id.activity_movie_data_root_layout_id)) {
+            mProgressBar.setVisibility(View.INVISIBLE);
             return;
         }
+        mProgressBar.setVisibility(View.VISIBLE);
         mFetchMovieCompleteDetailsTasker.execute();
 
     }
@@ -281,6 +287,8 @@ public class MovieDataActivity
 
     @Override
     public void processFinishAll() {
+        mProgressBar.setVisibility(View.INVISIBLE);
+
         mIsFavorite = isFavorite();
 
         mMovieDetailsAdapter.setMovieData(mMovieData);
