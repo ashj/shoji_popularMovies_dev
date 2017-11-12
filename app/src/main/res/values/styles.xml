@@ -22,11 +22,12 @@
     <style name="MovieDetailsGeneralStyle" parent="AppTheme">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingStart">@dimen/act_movie_data_text_paddingLeft</item>
-        <item name="android:paddingEnd">@dimen/act_movie_data_text_paddingRight</item>
+
     </style>
 
     <style name="MovieDetailsLabelStyle" parent="MovieDetailsGeneralStyle">
+        <item name="android:paddingStart">@dimen/act_movie_data_text_paddingLeft</item>
+        <item name="android:paddingEnd">@dimen/act_movie_data_text_paddingRight</item>
         <item name="android:textSize">@dimen/act_movie_data_heading_font_size</item>
     </style>
 
@@ -41,8 +42,9 @@
         <item name="android:paddingEnd">@dimen/act_movie_data_body_text_paddingRight</item>
     </style>
 
-    <style name="MovieReviewsLabelStyle" parent="MovieDetailsLabelStyle">
+    <style name="MovieReviewsLabelStyle" parent="MovieDetailsBodyStyle">
         <item name="android:textColor">@color/darker_gray</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:paddingTop">@dimen/act_movie_data_trailers_paddingBottom</item>
     </style>
 

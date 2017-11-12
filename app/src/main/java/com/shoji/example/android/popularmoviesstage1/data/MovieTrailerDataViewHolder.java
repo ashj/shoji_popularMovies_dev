@@ -18,6 +18,7 @@ public class MovieTrailerDataViewHolder
 
     private MovieTrailerViewHolderOnClickListener mMovieTrailerViewHolderOnClickListener;
 
+    private TextView mLabel_tv;
     private TextView mTitle_tv;
 
     public interface MovieTrailerViewHolderOnClickListener {
@@ -32,6 +33,7 @@ public class MovieTrailerDataViewHolder
 
         this.mContext = context;
 
+        mLabel_tv = itemView.findViewById(R.id.act_movie_data_trailer_label);
         mTitle_tv = itemView.findViewById(R.id.movie_trailer_title_tv);
 
         itemView.setOnClickListener(this);
@@ -51,5 +53,12 @@ public class MovieTrailerDataViewHolder
         Log.d(TAG, "Tapped on position="+adapterPosition);
 
         mMovieTrailerViewHolderOnClickListener.onClickMovieTrailer(adapterPosition);
+    }
+
+    public void showTitleLabel(int numItems) {
+        if(numItems > 0) {
+            mLabel_tv.setText(mContext.getResources().getQuantityString(R.plurals.trailer_plurals_label, numItems));
+            mLabel_tv.setVisibility(View.VISIBLE);
+        }
     }
 }

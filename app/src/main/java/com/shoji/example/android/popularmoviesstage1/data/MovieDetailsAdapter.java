@@ -133,7 +133,9 @@ public class MovieDetailsAdapter
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         //Log.d(TAG, "Binding at="+position);
-        int positionOffset = 0;
+        int positionOffset;
+        int listPosition;
+
         switch (holder.getItemViewType()) {
             case ITEMVIEWTYPE_MOVIE_DETAILS:
                 //Log.d(TAG, "Binding the movie details");
@@ -146,15 +148,21 @@ public class MovieDetailsAdapter
                 //Log.d(TAG, "Binding the movie trailers");
                 positionOffset = getItemCountUpTo(ITEMVIEWTYPE_MOVIE_DETAILS);
                 MovieTrailerDataViewHolder trailerViewHolder = (MovieTrailerDataViewHolder) holder;
-                YoutubeTrailerData trailerItem = mTrailerData.get(position-positionOffset);
+
+                listPosition = position-positionOffset;
+                Log.d(TAG, "listPosition="+listPosition);
+
+                YoutubeTrailerData trailerItem = mTrailerData.get(listPosition);
                 //Log.d(TAG, "got item i="+position+". value= "+trailerItem.toString());
                 trailerViewHolder.bindViewHolder(trailerItem);
+                if(listPosition == 0) {
+                    trailerViewHolder.showTitleLabel(mTrailerData.size());
+                }
+
                 break;
 
             case ITEMVIEWTYPE_MOVIE_REVIEWS:
-                int listPosition;
-
-                //Log.d(TAG, "Binding the movie trailers");
+                //Log.d(TAG, "Binding the movie reviews");
                 positionOffset = getItemCountUpTo(ITEMVIEWTYPE_MOVIE_TRAILERS);
 
                 //Log.d(TAG, "Offset for trailers="+positionOffset);

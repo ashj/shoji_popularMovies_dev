@@ -6,29 +6,36 @@
     android:orientation="horizontal"
     android:layout_gravity="start"
     android:background="@drawable/movie_trailer_list_selector"
-    android:layout_marginStart="@dimen/act_movie_data_body_text_paddingLeft"
-    android:layout_marginEnd="@dimen/act_movie_data_body_text_paddingRight"
+
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
 
+    <TextView
+        android:id="@+id/act_movie_data_trailer_label"
+        style="@style/MovieDetailsLabelStyle2"
+        tools:text="@string/trailer_other_label"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <ImageView
         android:id="@+id/movie_trailer_icon_image_view"
         android:layout_width="@dimen/act_movie_data_trailer_icon_size"
         android:layout_height="@dimen/act_movie_data_trailer_icon_size"
+        android:layout_marginStart="@dimen/act_movie_data_body_text_paddingLeft"
+        android:layout_marginEnd="@dimen/act_movie_data_body_text_paddingRight"
         android:background="@drawable/ic_play_button"
         app:layout_constraintBottom_toBottomOf="@+id/movie_trailer_title_tv"
-        app:layout_constraintTop_toTopOf="@+id/movie_trailer_title_tv"
+        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_trailer_label"
         app:layout_constraintStart_toStartOf="parent"
       />
 
     <TextView
         android:id="@+id/movie_trailer_title_tv"
         style="@style/MovieDetailsTrailerListStyle"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_trailer_label"
         app:layout_constraintStart_toEndOf="@+id/movie_trailer_icon_image_view"
         tools:text="@string/tools_trailer_tile" />
-
-
 
 </android.support.constraint.ConstraintLayout>

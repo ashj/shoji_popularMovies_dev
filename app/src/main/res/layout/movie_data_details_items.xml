@@ -48,14 +48,6 @@
         app:layout_constraintTop_toBottomOf="@+id/act_movie_data_overview_label"
         tools:text="@string/tools_movie_overview" />
 
-    <TextView
-        android:id="@+id/act_movie_data_trailer_label"
-        style="@style/MovieDetailsLabelStyle2"
-        android:text="@string/trailer_other_label"
-        app:layout_constraintStart_toStartOf="@+id/act_movie_data_overview_tv"
-        app:layout_constraintTop_toBottomOf="@+id/act_movie_data_overview_tv"
-        />
-
 </android.support.constraint.ConstraintLayout>
 
 
