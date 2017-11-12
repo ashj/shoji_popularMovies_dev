@@ -51,7 +51,25 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        return null;
+        final SQLiteDatabase db = mFavoriteMoviesDbHelper.getReadableDatabase();
+        Cursor result;
+
+        int match = sUriMatcher.match(uri);
+        switch(match) {
+            case FAVORITES:
+                result = db.query(FavoriteMoviesEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown URI:" + uri);
+        }
+
+        return result;
     }
 
     @Nullable
