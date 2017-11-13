@@ -6,11 +6,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.shoji.example.android.popularmoviesstage1.R;
-import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbJsonUtils;
 
-public abstract class TheMovieDb_LoaderCallBacksEx_Listeners<Result>
+public abstract class TheMovieDb_LoaderCallBacksListeners<Result>
         implements LoaderCallBacksListenersInterface<Result> {
-    private static final String TAG = TheMovieDb_LoaderCallBacksEx_Listeners.class.getSimpleName();
+    private static final String TAG = TheMovieDb_LoaderCallBacksListeners.class.getSimpleName();
 
 
     public static final String STRING_PARAM = "string_param";

@@ -3,7 +3,6 @@ package com.shoji.example.android.popularmoviesstage1.backgroundtask;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
-import android.util.Log;
 
 import com.shoji.example.android.popularmoviesstage1.data.MovieData;
 import com.shoji.example.android.popularmoviesstage1.data.MovieReviewData;
@@ -98,7 +97,7 @@ public class TheMovieDb_GetMovieCompleteDetails {
 
 
     private class MovieDataResultHandler
-            extends TheMovieDb_LoaderCallBacksEx_Listeners<MovieData>
+            extends TheMovieDb_LoaderCallBacksListeners<MovieData>
     {
         private final String TAG = MovieDataResultHandler.class.getSimpleName();
 
@@ -124,7 +123,7 @@ public class TheMovieDb_GetMovieCompleteDetails {
 
 
     private class TrailersResultHandler
-            extends TheMovieDb_LoaderCallBacksEx_Listeners<ArrayList<YoutubeTrailerData>> {
+            extends TheMovieDb_LoaderCallBacksListeners<ArrayList<YoutubeTrailerData>> {
         private final String TAG = TrailersResultHandler.class.getSimpleName();
 
 
@@ -151,7 +150,7 @@ public class TheMovieDb_GetMovieCompleteDetails {
 
 
     private class ReviewsResultHandler
-            extends TheMovieDb_LoaderCallBacksEx_Listeners<ArrayList<MovieReviewData>> {
+            extends TheMovieDb_LoaderCallBacksListeners<ArrayList<MovieReviewData>> {
         private final String TAG = ReviewsResultHandler.class.getSimpleName();
 
         @Override

@@ -15,14 +15,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.FavoriteMoviesCursorLoader;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksEx;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksListenersInterface;
-import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_LoaderCallBacksEx_Listeners;
+import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_LoaderCallBacksListeners;
 import com.shoji.example.android.popularmoviesstage1.data.MoviesListAdapter;
 import com.shoji.example.android.popularmoviesstage1.data.MoviesListAdapter.MovieDataAdapterOnClickHandler;
 import com.shoji.example.android.popularmoviesstage1.data.MovieData;
@@ -31,7 +30,6 @@ import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbJsonUtils;
 import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbUtils;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 
 public class MainActivity
@@ -167,7 +165,7 @@ public class MainActivity
         //Log.d(TAG, "createCriterionBundle -- criterion="+criterion);
 
         Bundle args = new Bundle();
-        args.putString(TheMovieDb_LoaderCallBacksEx_Listeners.STRING_PARAM, criterion);
+        args.putString(TheMovieDb_LoaderCallBacksListeners.STRING_PARAM, criterion);
         return args;
     }
 
@@ -263,7 +261,7 @@ public class MainActivity
 
     // [START] Implement fetch, parse for json and data processing
     private class MovieDataResultListener
-            extends TheMovieDb_LoaderCallBacksEx_Listeners<ArrayList<MovieData>>
+            extends TheMovieDb_LoaderCallBacksListeners<ArrayList<MovieData>>
     {
         private final String TAG = MovieDataResultListener.class.getSimpleName();
 

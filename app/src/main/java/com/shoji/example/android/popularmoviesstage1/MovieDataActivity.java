@@ -23,7 +23,7 @@ import android.widget.ProgressBar;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.FavoriteMoviesCursorLoader;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksListenersInterface;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_GetMovieCompleteDetails;
-import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_LoaderCallBacksEx_Listeners;
+import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_LoaderCallBacksListeners;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_GetMovieCompleteDetails.TheMovieDbOnLoadFinishedLister;
 import com.shoji.example.android.popularmoviesstage1.data.MovieData;
 import com.shoji.example.android.popularmoviesstage1.data.MovieReviewData;
@@ -136,7 +136,7 @@ public class MovieDataActivity
 
     private void createBackgroundTask() {
          Bundle args = new Bundle();
-        args.putString(TheMovieDb_LoaderCallBacksEx_Listeners.STRING_PARAM,
+        args.putString(TheMovieDb_LoaderCallBacksListeners.STRING_PARAM,
                 mMovieId);
 
         TheMovieDb_GetMovieCompleteDetails.TheMovieDbOnLoadFinishedLister processResults = this;
