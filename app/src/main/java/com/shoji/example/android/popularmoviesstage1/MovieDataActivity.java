@@ -219,29 +219,42 @@ public class MovieDataActivity
         if (mIsFavorite == true) {
             /* This will unmark the movie*/
             Log.d(TAG, "Button will delete");
+            int removedRows = 0;
             button.setBackground(getResources().getDrawable(android.R.drawable.btn_star_big_on));
 
 
             Log.d(TAG, "Will delete OP");
-            getContentResolver().delete(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
+            removedRows = getContentResolver().delete(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
                     FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID+"="+mMovieId, null);
+
+            if(removedRows > 0) {
+                mIsFavorite = false;
+                updateUI();
+            }
+
             Log.d(TAG, "Will deleted OP");
 
         } else {
             /* This will mark the movie */
             Log.d(TAG, "Button will add");
+            Uri addedUri = null;
             button.setBackground(getResources().getDrawable(android.R.drawable.btn_star_big_off));
 
             ContentValues cv = new ContentValues();
             cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, mMovieId);
             cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE, mMovieData.getTitle());
             Log.d(TAG, "Will add OP");
-            getContentResolver().insert(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, cv);
+            addedUri = getContentResolver().insert(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, cv);
             Log.d(TAG, "Will added OP");
 
+            if(addedUri != null) {
+                mIsFavorite = true;
+                updateUI();
+            }
+
         }
-        Log.d(TAG, "Call update UI");
-        updateFavoriteButtonUI(button);
+        //Log.d(TAG, "Call update UI");
+        //updateFavoriteButtonUI(button);
     }
 
     @Override
@@ -381,7 +394,9 @@ public class MovieDataActivity
         mFetchMovieCompleteDetailsTasker.resetResults();
         doFetchMovieTrailersAndReview();
     }
+    // [END] Activity menu bar
 
+    // [START] Query to check if the movie is favorite
     @Override
     public void onStartLoading(Context context) { }
 
@@ -401,12 +416,19 @@ public class MovieDataActivity
                 Log.d(TAG, "[attr] It is favorite!");
                 mIsFavorite = true;
             }
-            else
+            else {
                 Log.d(TAG, "[attr] It is not favorite...");
+
+            }
 
             cursor.close();
         }
+        updateUI();
 
+    }
+    // [END] Query to check if the movie is favorite
+
+    private void updateUI() {
         Log.d(TAG, "updateFavoriteButtonUi");
         if (mIsFavorite == true) {
             Log.d(TAG, "Change UI to on");
@@ -416,5 +438,4 @@ public class MovieDataActivity
             mFavoriteButton.setBackground(getResources().getDrawable(android.R.drawable.btn_star_big_off));
         }
     }
-    // [END] Activity menu bar
 }
