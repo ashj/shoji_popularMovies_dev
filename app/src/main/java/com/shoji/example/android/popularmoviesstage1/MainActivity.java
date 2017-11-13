@@ -22,6 +22,7 @@ import com.shoji.example.android.popularmoviesstage1.backgroundtask.FavoriteMovi
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksEx;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksListenersInterface;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderIDs;
+import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_GetPopularMovies;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_LoaderCallBacksListeners;
 import com.shoji.example.android.popularmoviesstage1.data.MoviesListAdapter;
 import com.shoji.example.android.popularmoviesstage1.data.MoviesListAdapter.MovieDataAdapterOnClickHandler;
@@ -56,6 +57,9 @@ public class MainActivity
 
     private LoaderCallBacksEx<ArrayList<MovieData>> mFetchMovieDataLoaderCallbacks;
 
+    private TheMovieDb_GetPopularMovies mFetchPopularMovies;
+    private TheMovieDb_GetPopularMovies.OnLoadFinishedLister mPopularMoviesHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         boolean fetchMovieDataFromNetwork = true;
@@ -66,6 +70,10 @@ public class MainActivity
 
         createGeneralViews();
         createMovieDataRecyclerView();
+
+
+
+
 
         if(savedInstanceState != null) {
             /* Restore movie data to save network usage */
@@ -142,8 +150,10 @@ public class MainActivity
     private void createFetchListenerAndCallback() {
         Context context = this;
 
-        mFetchMovieDataLoaderCallbacks =
-                new LoaderCallBacksEx<>(context, new MovieDataResultListener());
+        Bundle args = createArgs(); // needed
+        mPopularMoviesHandler = new PopularMoviesHandler();
+        mFetchPopularMovies = new TheMovieDb_GetPopularMovies(context, args, getSupportLoaderManager(), mPopularMoviesHandler);
+
     }
 
     private void doFetchMovieData() {
@@ -152,11 +162,12 @@ public class MainActivity
         if (!arePreconditionsValid(R.id.activity_main_root_layout_id)) {
             return;
         }
+        String criterion = mSharedPreference.getString(
+                getString(R.string.pref_sort_criterion_key),
+                getString(R.string.pref_sort_criterion_default_value));
 
-        Bundle args = createArgs();
-
-        initOrRestartLoader(LoaderIDs.LOADER_ID_FETCH_MOVIE_DATA_BY_CRITERION,
-                args, mFetchMovieDataLoaderCallbacks);
+        if(TextUtils.equals(getString(R.string.pref_sort_by_popularity_value), criterion))
+            mFetchPopularMovies.execute();
     }
 
     private Bundle createArgs() {
@@ -261,36 +272,11 @@ public class MainActivity
 
 
     // [START] Implement fetch, parse for json and data processing
-    private class MovieDataResultListener
-            extends TheMovieDb_LoaderCallBacksListeners<ArrayList<MovieData>>
-    {
-        private final String TAG = MovieDataResultListener.class.getSimpleName();
+    private class PopularMoviesHandler implements TheMovieDb_GetPopularMovies.OnLoadFinishedLister {
+
 
         @Override
-        public void onStartLoading(Context context) {
-            textView.setText(null);
-            mLoadingMovieDataProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public String fetchJsonString(String param) {
-            String jsonString = null;
-
-            if(TextUtils.equals(getString(R.string.pref_sort_by_popularity_value), param))
-                jsonString = TheMovieDbUtils.getMoviePopular();
-            else if(TextUtils.equals(getString(R.string.pref_sort_by_top_rated_value), param))
-                jsonString = TheMovieDbUtils.getMovieTopRated();
-
-            return jsonString;
-        }
-
-        @Override
-        public ArrayList<MovieData> parseJsonString(String jsonString) {
-            return TheMovieDbJsonUtils.parseMovieListJson(jsonString);
-        }
-
-        @Override
-        public void onLoadFinished(Context context, ArrayList<MovieData> result) {
+        public void processMovieData(ArrayList<MovieData> result) {
             mLoadingMovieDataProgressBar.setVisibility(View.INVISIBLE);
             if(result == null || result.size() == 0) {
                 textView.setText(R.string.error_null_json_returned);
@@ -306,13 +292,18 @@ public class MainActivity
                     Log.d(TAG, "--- CASES FAVORITE ONLY ----");
 
                     FavoriteMoviesHandler handler = new FavoriteMoviesHandler(result);
-                    FavoriteMoviesCursorLoader loader = new FavoriteMoviesCursorLoader(context, handler);
+                    FavoriteMoviesCursorLoader loader = new FavoriteMoviesCursorLoader(null, handler);
                     loader.queryFavoriteMovies(getSupportLoaderManager());
                 }
                 else {
                     swapMovieData(result);
                 }
             }
+        }
+
+        @Override
+        public void processFinishAll() {
+
         }
     }
 

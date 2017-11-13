@@ -159,6 +159,7 @@ public class TheMovieDb_GetMovieCompleteDetails
 
     }
 
+    @Override
     public void resetResults() {
         mFetchMovieDataByIdLoaderCallbacks.resetResult();
         mFetchMovieTrailersLoaderCallbacks.resetResult();
