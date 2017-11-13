@@ -26,18 +26,7 @@ public abstract class TheMovieDb_LoaderCallBacksListeners<Result>
         // Fetch json string.
         if (args != null && args.containsKey(STRING_PARAM)) {
             String param = args.getString(STRING_PARAM);
-
-            if(param != null && param.length() != 0) {
-                String favoriteOnly = context.getString(R.string.pref_sort_by_favorites_only_value);
-                if(TextUtils.equals(param, favoriteOnly)) {
-
-                    param = context.getString(R.string.pref_sort_criterion_default_value);
-                }
-
-                jsonString = fetchJsonString(param);
-
-
-            }
+            jsonString = fetchJsonString(param);
         }
         // Parse jsonString
         if(jsonString != null && jsonString.length() != 0) {
