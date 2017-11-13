@@ -10,6 +10,7 @@ public class LoaderIDs {
     public final static int LOADER_ID_FETCH_MOVIE_TRAILERS = 10002;
     public final static int LOADER_ID_FETCH_MOVIE_REVIEWS = 10003;
     public final static int LOADER_ID_FETCH_POPULAR_MOVIES = 10004;
+    public final static int LOADER_ID_FETCH_TOP_RATED_MOVIES = 10005;
 
     private LoaderIDs() {}
 }

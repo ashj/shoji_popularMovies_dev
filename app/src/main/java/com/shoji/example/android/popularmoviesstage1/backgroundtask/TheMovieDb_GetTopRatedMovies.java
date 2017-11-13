@@ -6,20 +6,17 @@ import android.support.v4.app.LoaderManager;
 import android.util.Log;
 
 import com.shoji.example.android.popularmoviesstage1.data.MovieData;
-import com.shoji.example.android.popularmoviesstage1.utils.NetworkUtils;
 import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbJsonUtils;
 import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbUtils;
 
 import java.util.ArrayList;
 
 
-
-public class TheMovieDb_GetPopularMovies
+public class TheMovieDb_GetTopRatedMovies
     extends TheMovieDb_LoaderCallBacks {
-    private final String TAG = TheMovieDb_GetPopularMovies.class.getSimpleName();
+    private final String TAG = TheMovieDb_GetTopRatedMovies.class.getSimpleName();
 
-    protected LoaderCallBacksEx<ArrayList<MovieData>> mFetchMoviesLoaderCallbacks;
-
+    private LoaderCallBacksEx<ArrayList<MovieData>> mFetchMoviesLoaderCallbacks;
 
     OnLoadFinishedLister mOnLoadFinishedHandler;
 
@@ -29,37 +26,20 @@ public class TheMovieDb_GetPopularMovies
 
     }
 
-
-    public TheMovieDb_GetPopularMovies(Context context,
-                                       Bundle args,
-                                       LoaderManager loaderManager,
-                                       OnLoadFinishedLister onLoadFinishedHandler) {
+    public TheMovieDb_GetTopRatedMovies(Context context,
+                                        Bundle args,
+                                        LoaderManager loaderManager,
+                                        OnLoadFinishedLister onLoadFinishedHandler) {
         super(context, args, loaderManager);
         mOnLoadFinishedHandler = onLoadFinishedHandler;
 
 
     }
 
-
-
-
-    public void execute() {
-        initOrRestartLoader(LoaderIDs.LOADER_ID_FETCH_POPULAR_MOVIES,
-                mArgs, mFetchMoviesLoaderCallbacks);
-
-    }
-
-
     @Override
-    protected void initOrRestartLoader(int loaderId,
-                                       Bundle args,
-                                       LoaderManager.LoaderCallbacks callback) {
-        if(!NetworkUtils.isNetworkConnected(mContext)) {
-            mOnLoadFinishedHandler.processFinishAll();
-            return;
-        }
-        Log.d(TAG, "loaderId:"+loaderId);
-        super.initOrRestartLoader(loaderId, args, callback);
+    public void execute() {
+        initOrRestartLoader(LoaderIDs.LOADER_ID_FETCH_TOP_RATED_MOVIES,
+                mArgs, mFetchMoviesLoaderCallbacks);
     }
 
     @Override
@@ -68,8 +48,6 @@ public class TheMovieDb_GetPopularMovies
                 new LoaderCallBacksEx<>(mContext, new MovieDataResultHandler());
 
     }
-
-
 
     private class MovieDataResultHandler
             extends TheMovieDb_LoaderCallBacksListeners<ArrayList<MovieData>>
@@ -80,7 +58,7 @@ public class TheMovieDb_GetPopularMovies
         @Override
         public String fetchJsonString(String param) {
             Log.d(TAG, "Fetching");
-            return TheMovieDbUtils.getMoviePopular();
+            return TheMovieDbUtils.getMovieTopRated();
         }
 
         @Override
@@ -95,8 +73,6 @@ public class TheMovieDb_GetPopularMovies
             mOnLoadFinishedHandler.processMovieData(result);
         }
     }
-
-
     @Override
     public void resetResults() {
         mFetchMoviesLoaderCallbacks.resetResult();

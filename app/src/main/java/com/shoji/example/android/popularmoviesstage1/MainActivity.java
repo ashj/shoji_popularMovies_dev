@@ -21,15 +21,13 @@ import android.widget.TextView;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.FavoriteMoviesCursorLoader;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksEx;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksListenersInterface;
-import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderIDs;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_GetPopularMovies;
+import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_GetTopRatedMovies;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_LoaderCallBacksListeners;
 import com.shoji.example.android.popularmoviesstage1.data.MoviesListAdapter;
 import com.shoji.example.android.popularmoviesstage1.data.MoviesListAdapter.MovieDataAdapterOnClickHandler;
 import com.shoji.example.android.popularmoviesstage1.data.MovieData;
 import com.shoji.example.android.popularmoviesstage1.database.FavoriteMoviesContract;
-import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbJsonUtils;
-import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbUtils;
 
 import java.util.ArrayList;
 
@@ -59,6 +57,9 @@ public class MainActivity
 
     private TheMovieDb_GetPopularMovies mFetchPopularMovies;
     private TheMovieDb_GetPopularMovies.OnLoadFinishedLister mPopularMoviesHandler;
+    private TheMovieDb_GetTopRatedMovies mFetchTopRatedMoviesLoaderCallBacks;
+    private TheMovieDb_GetTopRatedMovies.OnLoadFinishedLister mTopRatedMoviesHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +154,8 @@ public class MainActivity
         Bundle args = createArgs(); // needed
         mPopularMoviesHandler = new PopularMoviesHandler();
         mFetchPopularMovies = new TheMovieDb_GetPopularMovies(context, args, getSupportLoaderManager(), mPopularMoviesHandler);
+        mTopRatedMoviesHandler = new TopRatedMoviesHandler();
+        mFetchTopRatedMoviesLoaderCallBacks = new TheMovieDb_GetTopRatedMovies(context, args, getSupportLoaderManager(), mTopRatedMoviesHandler);
 
     }
 
@@ -168,6 +171,8 @@ public class MainActivity
 
         if(TextUtils.equals(getString(R.string.pref_sort_by_popularity_value), criterion))
             mFetchPopularMovies.execute();
+        else if(TextUtils.equals(getString(R.string.pref_sort_by_top_rated_value), criterion))
+            mFetchTopRatedMoviesLoaderCallBacks.execute();
     }
 
     private Bundle createArgs() {
@@ -265,7 +270,10 @@ public class MainActivity
         Log.d(TAG, "Calling redoFetchMovieData()");
         mMoviesListAdapter.setMovieData(null);
         mMovieDataRecyclerView.setAdapter(mMoviesListAdapter);
-        mFetchMovieDataLoaderCallbacks.resetResult();
+        if(mFetchMovieDataLoaderCallbacks!=null)
+            mFetchMovieDataLoaderCallbacks.resetResult();
+        if(mFetchTopRatedMoviesLoaderCallBacks!=null)
+            mFetchTopRatedMoviesLoaderCallBacks.resetResults();
         doFetchMovieData();
     }
     // [END] Listen for Preferences changes
@@ -273,8 +281,6 @@ public class MainActivity
 
     // [START] Implement fetch, parse for json and data processing
     private class PopularMoviesHandler implements TheMovieDb_GetPopularMovies.OnLoadFinishedLister {
-
-
         @Override
         public void processMovieData(ArrayList<MovieData> result) {
             mLoadingMovieDataProgressBar.setVisibility(View.INVISIBLE);
@@ -282,7 +288,7 @@ public class MainActivity
                 textView.setText(R.string.error_null_json_returned);
             }
             else {
-                // test apply Favorites
+                // TODO test apply Favorites
                 String criterion = mSharedPreference.getString(
                         getString(R.string.pref_sort_criterion_key),
                         getString(R.string.pref_sort_criterion_default_value));
@@ -302,10 +308,40 @@ public class MainActivity
         }
 
         @Override
-        public void processFinishAll() {
-
-        }
+        public void processFinishAll() { }
     }
+    // [START] Implement fetch, parse for json and data processing
+    private class TopRatedMoviesHandler implements TheMovieDb_GetTopRatedMovies.OnLoadFinishedLister {
+        @Override
+        public void processMovieData(ArrayList<MovieData> result) {
+            mLoadingMovieDataProgressBar.setVisibility(View.INVISIBLE);
+            if(result == null || result.size() == 0) {
+                textView.setText(R.string.error_null_json_returned);
+            }
+            else {
+                // TODO test apply Favorites
+                String criterion = mSharedPreference.getString(
+                        getString(R.string.pref_sort_criterion_key),
+                        getString(R.string.pref_sort_criterion_default_value));
+
+                if (TextUtils.equals(criterion,
+                        getString(R.string.pref_sort_by_favorites_only_value))) {
+                    Log.d(TAG, "--- CASES FAVORITE ONLY ----");
+
+                    FavoriteMoviesHandler handler = new FavoriteMoviesHandler(result);
+                    FavoriteMoviesCursorLoader loader = new FavoriteMoviesCursorLoader(null, handler);
+                    loader.queryFavoriteMovies(getSupportLoaderManager());
+                }
+                else {
+                    swapMovieData(result);
+                }
+            }
+        }
+
+        @Override
+        public void processFinishAll() { }
+    }
+
 
     private class FavoriteMoviesHandler
         implements LoaderCallBacksListenersInterface<Cursor> {
