@@ -15,14 +15,10 @@ import java.util.ArrayList;
 
 
 
-public class TheMovieDb_GetMovieCompleteDetails {
+public class TheMovieDb_GetMovieCompleteDetails
+    extends TheMovieDb_LoaderCallBacks {
 
 
-
-    private Context mContext;
-    private LoaderManager mLoaderManager;
-
-    private Bundle mArgs;
     private LoaderCallBacksEx<MovieData> mFetchMovieDataByIdLoaderCallbacks;
     private LoaderCallBacksEx<ArrayList<YoutubeTrailerData>> mFetchMovieTrailersLoaderCallbacks;
     private LoaderCallBacksEx<ArrayList<MovieReviewData>> mFetchMovieReviewsLoaderCallbacks;
@@ -44,12 +40,10 @@ public class TheMovieDb_GetMovieCompleteDetails {
                                               Bundle args,
                                               LoaderManager loaderManager,
                                               TheMovieDbOnLoadFinishedLister onLoadFinishedHandler) {
-        mContext = context;
-        mArgs = args;
-        mLoaderManager = loaderManager;
+        super(context, args, loaderManager);
         mOnLoadFinishedHandler = onLoadFinishedHandler;
 
-        createFetchHandlersAndCallback();
+
     }
 
 
@@ -62,6 +56,7 @@ public class TheMovieDb_GetMovieCompleteDetails {
     }
 
 
+    @Override
     protected void initOrRestartLoader(int loaderId,
                                        Bundle args,
                                        LoaderManager.LoaderCallbacks callback) {
@@ -70,18 +65,11 @@ public class TheMovieDb_GetMovieCompleteDetails {
             return;
         }
 
-        if(null == mLoaderManager.getLoader(loaderId)) {
-            mLoaderManager.initLoader(loaderId,
-                    args, callback);
-        }
-        else {
-            mLoaderManager.restartLoader(loaderId,
-                    args, callback);
-        }
+        super.initOrRestartLoader(loaderId, args, callback);
     }
 
-
-    private void createFetchHandlersAndCallback() {
+    @Override
+    protected void createHandlersAndCallbacks() {
         mFetchMovieDataByIdLoaderCallbacks =
                 new LoaderCallBacksEx<>(mContext, new MovieDataResultHandler());
 
