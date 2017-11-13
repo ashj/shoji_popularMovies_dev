@@ -43,11 +43,12 @@ public class MovieDetailsAdapter
     private MovieTrailerAdapterOnClickHandler mMovieTrailerAdapterOnClickHandler;
     private MovieFavoriteAdapterOnClickHandler mMovieFavoriteAdapterOnClickHandler;
 
-    MovieDetailsViewHolder mMovieDataHolder;
+
+    private MovieDetailsViewHolder mMovieDataHolder;
 
     public interface MovieFavoriteAdapterOnClickHandler {
         void onClickFavoriteButton(Button button);
-        void updateUi(Button button);
+        void updateFavoriteButtonUI(Button button);
     }
 
     public interface MovieTrailerAdapterOnClickHandler {
@@ -154,7 +155,7 @@ public class MovieDetailsAdapter
                 MovieTrailerDataViewHolder trailerViewHolder = (MovieTrailerDataViewHolder) holder;
 
                 listPosition = position-positionOffset;
-                Log.d(TAG, "listPosition="+listPosition);
+                //Log.d(TAG, "listPosition="+listPosition);
 
                 YoutubeTrailerData trailerItem = mTrailerData.get(listPosition);
                 //Log.d(TAG, "got item i="+position+". value= "+trailerItem.toString());
@@ -194,15 +195,16 @@ public class MovieDetailsAdapter
     private class MovieDetailsFavoriteButtonHandler implements
     MovieDetailsViewHolder.OnClickFavoriteButtonListener {
         @Override
-        public void OnClick(View view) {
+        public void onClickFavoriteButton(View view) {
             if(view.getId() == R.id.act_movie_data_favorite_button) {
                 Button button = (Button) view;
+
                 mMovieFavoriteAdapterOnClickHandler.onClickFavoriteButton(button);
             }
         }
         @Override
-        public void updateUi(Button button) {
-            mMovieFavoriteAdapterOnClickHandler.updateUi(button);
+        public void updateFavoriteButtonUI(Button button) {
+            mMovieFavoriteAdapterOnClickHandler.updateFavoriteButtonUI(button);
         }
     }
 
@@ -313,7 +315,6 @@ public class MovieDetailsAdapter
 
 
     }
-
 
 
 }

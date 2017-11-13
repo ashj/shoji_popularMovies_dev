@@ -139,7 +139,6 @@ public class MainActivity
     }
 
 
-
     private void createFetchListenerAndCallback() {
         Context context = this;
 
@@ -299,69 +298,10 @@ public class MainActivity
             }
             else {
                 // test apply Favorites
-                listDb(result);
-
                 swapMovieData(result);
             }
         }
     }
-
-    private void listDb(ArrayList<MovieData> list) {
-        //String selection = FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID+"="+movieId;
-
-    /*Cursor cursor = getContentResolver().query(
-            FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
-            null,
-            null,
-            null, null);*/
-        //cursor.close();
-
-
-        FavoriteMoviesCursorLoader favoriteMoviesCursorLoader = new FavoriteMoviesCursorLoader(this, new FavoriteMoviesQueryHandler(list));
-        favoriteMoviesCursorLoader.initOrRestartLoader(getSupportLoaderManager());
-    }
-
-    private class FavoriteMoviesQueryHandler implements LoaderCallBacksListenersInterface<Cursor> {
-        ArrayList<MovieData> mList;
-
-        FavoriteMoviesQueryHandler(ArrayList<MovieData> list) {
-            mList = list;
-        }
-
-        @Override
-        public void onStartLoading(Context context) {  }
-
-        @Override
-        public Cursor onLoadInBackground(Context context, Bundle args) { return null; }
-
-        @Override
-        public void onLoadFinished(Context context, Cursor cursor) {
-            if (mList == null || mList.size() == 0)
-                return;
-
-            int isFavorite = 0;
-            int columnIndex = cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID);
-
-            Log.d(TAG, "Set favorite by DB");
-            for (MovieData movieData : mList) {
-
-                String movieId = movieData.getId();
-                cursor.moveToFirst();
-
-                while (cursor.moveToNext()) {
-                    String cursorMovieId = cursor.getString(columnIndex);
-                    if (TextUtils.equals(cursorMovieId, movieId)) {
-                        isFavorite = 1;
-                        Log.d(TAG, "Set favorite by DB -- on -- title:" + movieData.getTitle());
-                        break;
-                    }
-                }
-
-                movieData.setIsFavorite(isFavorite);
-            }
-            cursor.close();
-        }
-    };
     // [END] Implement fetch, parse for json and data processing
 
 

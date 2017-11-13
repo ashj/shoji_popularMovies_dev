@@ -2,6 +2,7 @@ package com.shoji.example.android.popularmoviesstage1.data;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,8 +31,8 @@ public class MovieDetailsViewHolder
     private OnClickFavoriteButtonListener mOnClickFavoriteButtonHandler;
 
     public interface OnClickFavoriteButtonListener {
-        void OnClick(View view);
-        void updateUi(Button button);
+        void onClickFavoriteButton(View view);
+        void updateFavoriteButtonUI(Button button);
     }
 
 
@@ -67,7 +68,7 @@ public class MovieDetailsViewHolder
 
         mFavoriteButton.setOnClickListener(onClickFavorite(context));
         mOnClickFavoriteButtonHandler = onClickFavoriteButtonListener;
-        mOnClickFavoriteButtonHandler.updateUi(mFavoriteButton);
+        mOnClickFavoriteButtonHandler.updateFavoriteButtonUI(mFavoriteButton);
 
 
         String posterPath = movieData.getPosterPath();
@@ -80,7 +81,7 @@ public class MovieDetailsViewHolder
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mOnClickFavoriteButtonHandler.OnClick(view);
+                mOnClickFavoriteButtonHandler.onClickFavoriteButton(view);
             }
         };
     }
