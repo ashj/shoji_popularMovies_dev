@@ -16,10 +16,6 @@ import java.util.ArrayList;
 public class TheMovieDbJsonUtils {
     private static final String TAG = TheMovieDbJsonUtils.class.getSimpleName();
 
-    public final static int FLAGS_NO_FLAGS = 0x0000;
-    public final static int FLAGS_FILTER_FAVORITES_ONLY = 0x0001;
-
-
     private static final String JSON_PAGE = "page";
 
     private static final String JSON_RESULTS = "results";
@@ -43,7 +39,7 @@ public class TheMovieDbJsonUtils {
     private static final String JSON_CONTENT = "content";
 
 
-    public static ArrayList<MovieData> parseMovieListJson(String jsonStr, int flag) {
+    public static ArrayList<MovieData> parseMovieListJson(String jsonStr) {
         ArrayList<MovieData> movieDataList = null;
         //Log.d(TAG, "Starting parseMovieListJson");
         try {
@@ -59,13 +55,9 @@ public class TheMovieDbJsonUtils {
                 for (int i = 0; i < resultsArray.length(); i++) {
                     JSONObject movieJsonObject = resultsArray.getJSONObject(i);
 
-                    // filter movies to add according to filter flag value.
                     MovieData movieData = getSingleMovieData(movieJsonObject);
-                    if(movieJsonObject.has(JSON_ID) &&
-                        shouldAddMovie(movieData, flag)) {
-                        movieDataList.add(movieData);
-                        //Log.d(TAG, "Parsed: " + movieData);
-                    }
+                    movieDataList.add(movieData);
+                    //Log.d(TAG, "Parsed: " + movieData);
                 }
             }
         } catch (JSONException jsone) {
@@ -191,36 +183,4 @@ public class TheMovieDbJsonUtils {
         return "";
     }
 
-    // [START] filter movie list according to flag
-    private static boolean shouldAddMovie(MovieData movieData, int flag) {
-        //Log.d(TAG, "Movie list flag="+flag);
-        boolean result = true;
-
-        if( (flag & FLAGS_FILTER_FAVORITES_ONLY) == FLAGS_FILTER_FAVORITES_ONLY ) {
-            Log.d(TAG, "FAVORITE FILTER");
-
-            String movieId = movieData.getId();
-            if(movieId.length() == 0)
-                result = false;
-            else {
-                result = isMovieFavorite(movieId);
-                movieData.setIsFavorite( (result==true) ? 1 : 0 );
-                //Log.d(TAG, "Movie isFavorite set to:"+movieData.getIsFavorite());
-            }
-        }
-        //else {
-        //    Log.d(TAG, "NO FILTER");
-        //}
-
-        return result;
-    }
-
-    // TODO implement FAVORITE
-    private static boolean isMovieFavorite(String movieId) {
-        //return (mMovieData!= null && mMovieData.getIsFavorite() == 1);
-        boolean isFavorite = ((int) (Math.random() * 2)) == 1;
-        Log.d(TAG, "MovieId:"+movieId+" favorite:"+isFavorite);
-        return isFavorite; // testing
-    }
-    // [END] filter movie list according to flag
 }

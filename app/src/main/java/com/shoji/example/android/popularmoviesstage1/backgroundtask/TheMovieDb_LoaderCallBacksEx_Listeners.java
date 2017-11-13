@@ -23,7 +23,6 @@ public abstract class TheMovieDb_LoaderCallBacksEx_Listeners<Result>
         Log.d(TAG, "Called");
         Result result = null;
         String jsonString = null;
-        int flag = TheMovieDbJsonUtils.FLAGS_NO_FLAGS;
 
         // Fetch json string.
         if (args != null && args.containsKey(STRING_PARAM)) {
@@ -32,7 +31,7 @@ public abstract class TheMovieDb_LoaderCallBacksEx_Listeners<Result>
             if(param != null && param.length() != 0) {
                 String favoriteOnly = context.getString(R.string.pref_sort_by_favorites_only_value);
                 if(TextUtils.equals(param, favoriteOnly)) {
-                    //flag |= TheMovieDbJsonUtils.FLAGS_FILTER_FAVORITES_ONLY;
+
                     param = context.getString(R.string.pref_sort_criterion_default_value);
                 }
 
@@ -43,14 +42,14 @@ public abstract class TheMovieDb_LoaderCallBacksEx_Listeners<Result>
         }
         // Parse jsonString
         if(jsonString != null && jsonString.length() != 0) {
-                result = parseJsonString(jsonString, flag);
+                result = parseJsonString(jsonString);
         }
 
         return result;
     }
 
     protected abstract String fetchJsonString(String param);
-    protected abstract Result parseJsonString(String jsonString, int flags);
+    protected abstract Result parseJsonString(String jsonString);
 
     @Override
     public void onLoadFinished(Context context, Result result) {}

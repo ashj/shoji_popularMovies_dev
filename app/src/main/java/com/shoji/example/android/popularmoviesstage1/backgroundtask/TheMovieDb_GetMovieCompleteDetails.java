@@ -109,7 +109,7 @@ public class TheMovieDb_GetMovieCompleteDetails {
         }
 
         @Override
-        public MovieData parseJsonString(String jsonString, int flag) {
+        public MovieData parseJsonString(String jsonString) {
             return TheMovieDbJsonUtils.parseSingleMovieData(jsonString);
         }
 
@@ -134,7 +134,7 @@ public class TheMovieDb_GetMovieCompleteDetails {
         }
 
         @Override
-        public ArrayList<YoutubeTrailerData> parseJsonString(String jsonString, int flag) {
+        public ArrayList<YoutubeTrailerData> parseJsonString(String jsonString) {
             return TheMovieDbJsonUtils.parseTrailerListJson(jsonString);
         }
 
@@ -160,7 +160,7 @@ public class TheMovieDb_GetMovieCompleteDetails {
         }
 
         @Override
-        public ArrayList<MovieReviewData> parseJsonString(String jsonString, int flag) {
+        public ArrayList<MovieReviewData> parseJsonString(String jsonString) {
             return TheMovieDbJsonUtils.parseMovieReviewJson(jsonString);
         }
 

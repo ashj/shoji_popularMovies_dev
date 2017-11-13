@@ -165,7 +165,6 @@ public class MainActivity
                 getString(R.string.pref_sort_criterion_key),
                 getString(R.string.pref_sort_criterion_default_value));
         //Log.d(TAG, "createCriterionBundle -- criterion="+criterion);
-        int filterFlags = TheMovieDbJsonUtils.FLAGS_NO_FLAGS;
 
         Bundle args = new Bundle();
         args.putString(TheMovieDb_LoaderCallBacksEx_Listeners.STRING_PARAM, criterion);
@@ -287,8 +286,8 @@ public class MainActivity
         }
 
         @Override
-        public ArrayList<MovieData> parseJsonString(String jsonString, int flag) {
-            return TheMovieDbJsonUtils.parseMovieListJson(jsonString, flag);
+        public ArrayList<MovieData> parseJsonString(String jsonString) {
+            return TheMovieDbJsonUtils.parseMovieListJson(jsonString);
         }
 
         @Override
