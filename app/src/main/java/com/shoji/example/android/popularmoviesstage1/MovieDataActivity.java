@@ -1,5 +1,6 @@
 package com.shoji.example.android.popularmoviesstage1;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -209,14 +210,20 @@ public class MovieDataActivity
             Log.d(TAG, "Change to on");
             button.setBackground(getResources().getDrawable(android.R.drawable.btn_star_big_on));
 
-            //getContentResolver().delete(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
-            //        "_id="+mM)
+            getContentResolver().delete(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
+                    FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID+"="+mMovieId, null);
 
             mIsFavorite = false;
         } else {
             /* This will mark the movie */
             Log.d(TAG, "Change to off");
             button.setBackground(getResources().getDrawable(android.R.drawable.btn_star_big_off));
+
+            ContentValues cv = new ContentValues();
+            cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, mMovieId);
+            cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE, mMovieData.getTitle());
+            getContentResolver().insert(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, cv);
+
             mIsFavorite = true;
         }
         updateUi(button);

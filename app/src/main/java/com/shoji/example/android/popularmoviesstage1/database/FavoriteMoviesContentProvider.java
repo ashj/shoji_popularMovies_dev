@@ -12,10 +12,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
+
 import com.shoji.example.android.popularmoviesstage1.database.FavoriteMoviesContract.FavoriteMoviesEntry;
 
 
 public class FavoriteMoviesContentProvider extends ContentProvider {
+    private static final String TAG = FavoriteMoviesContentProvider.class.getSimpleName();
+
     private FavoriteMoviesDbHelper mFavoriteMoviesDbHelper;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
@@ -81,15 +85,18 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
+        Log.d(TAG, "Insert -- uri:"+uri);
         final SQLiteDatabase db = mFavoriteMoviesDbHelper.getWritableDatabase();
         Uri result;
 
         int match = sUriMatcher.match(uri);
         switch(match) {
             case FAVORITES:
+                Log.d(TAG, "Insert -- FAVORITES");
                 long id = db.insert(FavoriteMoviesEntry.TABLE_NAME, null, values);
                 if(id > 0) {
                     result = ContentUris.withAppendedId(FavoriteMoviesEntry.CONTENT_URI, id);
+                    Log.d(TAG, "Inserted -- result:"+result.toString());
                 }
                 else {
                     throw new SQLException("Failed to insert row into: " + uri);
@@ -105,6 +112,8 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+        Log.d(TAG, "Delete -- uri:"+uri);
+
         final SQLiteDatabase db = mFavoriteMoviesDbHelper.getWritableDatabase();
         int numRowsDeleted = 0;
 
@@ -113,6 +122,7 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         switch (match) {
             case FAVORITES:
+                Log.d(TAG, "Delete -- FAVORITES");
                 numRowsDeleted = db.delete(
                         FavoriteMoviesEntry.TABLE_NAME,
                         selection,
@@ -125,7 +135,7 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
         if(numRowsDeleted > 0)
             getContext().getContentResolver().notifyChange(uri, null);
 
-
+        Log.d(TAG, "Deleted -- numRowsDeleted="+numRowsDeleted);
         return numRowsDeleted;
     }
 
