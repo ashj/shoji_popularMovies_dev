@@ -212,7 +212,6 @@ public class MovieDataActivity
 
 
     // [START] Favorite button implementation
-    // TODO implement FAVORITE
     @Override
     public void onClickFavoriteButton(Button button) {
         Log.d(TAG, "Clicked on favorite");
@@ -220,8 +219,6 @@ public class MovieDataActivity
             /* This will unmark the movie*/
             Log.d(TAG, "Button will delete");
             int removedRows = 0;
-            button.setBackground(getResources().getDrawable(android.R.drawable.btn_star_big_on));
-
 
             Log.d(TAG, "Will delete OP");
             removedRows = getContentResolver().delete(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
@@ -231,21 +228,17 @@ public class MovieDataActivity
                 mIsFavorite = false;
                 updateUI();
             }
-
-            Log.d(TAG, "Will deleted OP");
-
-        } else {
+        }
+        else {
             /* This will mark the movie */
             Log.d(TAG, "Button will add");
             Uri addedUri = null;
-            button.setBackground(getResources().getDrawable(android.R.drawable.btn_star_big_off));
 
             ContentValues cv = new ContentValues();
             cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, mMovieId);
             cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE, mMovieData.getTitle());
             Log.d(TAG, "Will add OP");
             addedUri = getContentResolver().insert(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, cv);
-            Log.d(TAG, "Will added OP");
 
             if(addedUri != null) {
                 mIsFavorite = true;
@@ -253,8 +246,6 @@ public class MovieDataActivity
             }
 
         }
-        //Log.d(TAG, "Call update UI");
-        //updateFavoriteButtonUI(button);
     }
 
     @Override
@@ -335,6 +326,9 @@ public class MovieDataActivity
     }
     // [END] Results processing for each step
 
+
+
+
     // [START] Activity menu bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -358,18 +352,18 @@ public class MovieDataActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /* Trailer sharing */
     private void createShareTrailer() {
         ArrayList<YoutubeTrailerData> trailerList = null;
         YoutubeTrailerData trailerData = null;
         Log.d(TAG, "createShareTrailer");
         if (mMenu == null) return;
 
-        if(mMovieDetailsAdapter != null)
+        if (mMovieDetailsAdapter != null)
             trailerList = mMovieDetailsAdapter.getTrailerData();
-        if(trailerList != null && trailerList.size() != 0)
+        if (trailerList != null && trailerList.size() != 0)
             trailerData = trailerList.get(0);
-        if(trailerData != null) {
-
+        if (trailerData != null) {
 
             String trailerUrlString = UrlStringMaker.createYoutubeUrlString(trailerData.getKey());
             Intent intent = ShareCompat.IntentBuilder.from(this)
@@ -384,6 +378,8 @@ public class MovieDataActivity
         }
     }
 
+
+    /* For refresh */
     private void redoFetchMovieData() {
         /* Drop any previous Result then fetch the data. */
         Log.d(TAG, "Calling redoFetchMovieData()");
@@ -411,13 +407,13 @@ public class MovieDataActivity
         /* check if the movie is in the favorites list */
         if(cursor != null && cursor.moveToFirst()) {
             int columnIndex = cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID);
-            Log.d(TAG, "Got movieId:"+cursor.getString(columnIndex));
+            //Log.d(TAG, "Got movieId:"+cursor.getString(columnIndex));
             if(TextUtils.equals(mMovieId, cursor.getString(columnIndex))) {
-                Log.d(TAG, "[attr] It is favorite!");
+                //Log.d(TAG, "[attr] It is favorite!");
                 mIsFavorite = true;
             }
             else {
-                Log.d(TAG, "[attr] It is not favorite...");
+                //Log.d(TAG, "[attr] It is not favorite...");
 
             }
 
@@ -426,16 +422,17 @@ public class MovieDataActivity
         updateUI();
 
     }
-    // [END] Query to check if the movie is favorite
+
 
     private void updateUI() {
-        Log.d(TAG, "updateFavoriteButtonUi");
+        //Log.d(TAG, "updateFavoriteButtonUi");
         if (mIsFavorite == true) {
-            Log.d(TAG, "Change UI to on");
+            //Log.d(TAG, "Change UI to on");
             mFavoriteButton.setBackground(getResources().getDrawable(android.R.drawable.btn_star_big_on));
         } else {
-            Log.d(TAG, "Change UI to off");
+            //Log.d(TAG, "Change UI to off");
             mFavoriteButton.setBackground(getResources().getDrawable(android.R.drawable.btn_star_big_off));
         }
     }
+    // [END] Query to check if the movie is favorite
 }
