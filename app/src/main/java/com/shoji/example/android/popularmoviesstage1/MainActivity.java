@@ -3,6 +3,7 @@ package com.shoji.example.android.popularmoviesstage1;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,14 +15,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.shoji.example.android.popularmoviesstage1.backgroundtask.FavoriteMoviesCursorLoader;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksEx;
+import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksListenersInterface;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_LoaderCallBacksEx_Listeners;
 import com.shoji.example.android.popularmoviesstage1.data.MoviesListAdapter;
 import com.shoji.example.android.popularmoviesstage1.data.MoviesListAdapter.MovieDataAdapterOnClickHandler;
 import com.shoji.example.android.popularmoviesstage1.data.MovieData;
+import com.shoji.example.android.popularmoviesstage1.database.FavoriteMoviesContract;
 import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbJsonUtils;
 import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbUtils;
 
@@ -293,10 +298,70 @@ public class MainActivity
                 mLoadingMovieDataProgressBar.setVisibility(View.INVISIBLE);
             }
             else {
+                // test apply Favorites
+                listDb(result);
+
                 swapMovieData(result);
             }
         }
     }
+
+    private void listDb(ArrayList<MovieData> list) {
+        //String selection = FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID+"="+movieId;
+
+    /*Cursor cursor = getContentResolver().query(
+            FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
+            null,
+            null,
+            null, null);*/
+        //cursor.close();
+
+
+        FavoriteMoviesCursorLoader favoriteMoviesCursorLoader = new FavoriteMoviesCursorLoader(this, new FavoriteMoviesQueryHandler(list));
+        favoriteMoviesCursorLoader.initOrRestartLoader(getSupportLoaderManager());
+    }
+
+    private class FavoriteMoviesQueryHandler implements LoaderCallBacksListenersInterface<Cursor> {
+        ArrayList<MovieData> mList;
+
+        FavoriteMoviesQueryHandler(ArrayList<MovieData> list) {
+            mList = list;
+        }
+
+        @Override
+        public void onStartLoading(Context context) {  }
+
+        @Override
+        public Cursor onLoadInBackground(Context context, Bundle args) { return null; }
+
+        @Override
+        public void onLoadFinished(Context context, Cursor cursor) {
+            if (mList == null || mList.size() == 0)
+                return;
+
+            int isFavorite = 0;
+            int columnIndex = cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID);
+
+            Log.d(TAG, "Set favorite by DB");
+            for (MovieData movieData : mList) {
+
+                String movieId = movieData.getId();
+                cursor.moveToFirst();
+
+                while (cursor.moveToNext()) {
+                    String cursorMovieId = cursor.getString(columnIndex);
+                    if (TextUtils.equals(cursorMovieId, movieId)) {
+                        isFavorite = 1;
+                        Log.d(TAG, "Set favorite by DB -- on -- title:" + movieData.getTitle());
+                        break;
+                    }
+                }
+
+                movieData.setIsFavorite(isFavorite);
+            }
+            cursor.close();
+        }
+    };
     // [END] Implement fetch, parse for json and data processing
 
 

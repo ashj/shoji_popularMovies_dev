@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +20,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.shoji.example.android.popularmoviesstage1.backgroundtask.FavoriteMoviesCursorLoader;
+import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksListenersInterface;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_GetMovieCompleteDetails;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_LoaderCallBacksEx_Listeners;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_GetMovieCompleteDetails.TheMovieDbOnLoadFinishedLister;
@@ -84,6 +88,8 @@ public class MovieDataActivity
         createBackgroundTask();
 
         createMovieDataRecyclerView();
+
+
 
         boolean isInstanceStateDataPresent = isRestoreInstanceStatePossible(bundle);
 
@@ -213,6 +219,7 @@ public class MovieDataActivity
             getContentResolver().delete(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
                     FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID+"="+mMovieId, null);
 
+
             mIsFavorite = false;
         } else {
             /* This will mark the movie */
@@ -223,11 +230,12 @@ public class MovieDataActivity
             cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID, mMovieId);
             cv.put(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE, mMovieData.getTitle());
             getContentResolver().insert(FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI, cv);
-
             mIsFavorite = true;
         }
         updateUi(button);
     }
+
+
 
 
     @Override
@@ -256,6 +264,9 @@ public class MovieDataActivity
 
         return (result);
     }
+
+
+
     // [END] Favorite button implementation
 
 
