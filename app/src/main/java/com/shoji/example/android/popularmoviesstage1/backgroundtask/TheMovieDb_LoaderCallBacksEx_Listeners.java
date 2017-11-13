@@ -32,7 +32,7 @@ public abstract class TheMovieDb_LoaderCallBacksEx_Listeners<Result>
             if(param != null && param.length() != 0) {
                 String favoriteOnly = context.getString(R.string.pref_sort_by_favorites_only_value);
                 if(TextUtils.equals(param, favoriteOnly)) {
-                    flag |= TheMovieDbJsonUtils.FLAGS_FILTER_FAVORITES_ONLY;
+                    //flag |= TheMovieDbJsonUtils.FLAGS_FILTER_FAVORITES_ONLY;
                     param = context.getString(R.string.pref_sort_criterion_default_value);
                 }
 

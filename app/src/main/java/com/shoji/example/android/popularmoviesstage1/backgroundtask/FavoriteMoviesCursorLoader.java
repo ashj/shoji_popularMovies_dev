@@ -62,7 +62,7 @@ public class FavoriteMoviesCursorLoader
         if(mLoaderCallBacksListeners != null)
             mLoaderCallBacksListeners.onLoadFinished(mContext, cursor);
 
-        if(cursor == null && !cursor.moveToFirst())
+        /*if(cursor == null && !cursor.moveToFirst())
             return;
 
         int index = cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE);
@@ -72,7 +72,7 @@ public class FavoriteMoviesCursorLoader
 
             Log.d(TAG, "Movie in DB: "+movieTitle);
 
-        }
+        }*/
     }
 
     @Override

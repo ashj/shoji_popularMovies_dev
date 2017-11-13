@@ -31,6 +31,7 @@ import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbJsonUtils;
 import com.shoji.example.android.popularmoviesstage1.utils.TheMovieDbUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 public class MainActivity
@@ -292,16 +293,62 @@ public class MainActivity
 
         @Override
         public void onLoadFinished(Context context, ArrayList<MovieData> result) {
+            mLoadingMovieDataProgressBar.setVisibility(View.INVISIBLE);
             if(result == null || result.size() == 0) {
                 textView.setText(R.string.error_null_json_returned);
-                mLoadingMovieDataProgressBar.setVisibility(View.INVISIBLE);
             }
             else {
                 // test apply Favorites
-                swapMovieData(result);
+                String criterion = mSharedPreference.getString(
+                        getString(R.string.pref_sort_criterion_key),
+                        getString(R.string.pref_sort_criterion_default_value));
+
+                if (TextUtils.equals(criterion,
+                        getString(R.string.pref_sort_by_favorites_only_value))) {
+                    Log.d(TAG, "--- CASES FAVORITE ONLY ----");
+
+                    FavoriteMoviesHandler handler = new FavoriteMoviesHandler(result);
+                    FavoriteMoviesCursorLoader loader = new FavoriteMoviesCursorLoader(context, handler);
+                    loader.queryFavoriteMovies(getSupportLoaderManager());
+                }
+                else {
+                    swapMovieData(result);
+                }
             }
         }
     }
+
+    private class FavoriteMoviesHandler
+        implements LoaderCallBacksListenersInterface<Cursor> {
+        ArrayList<MovieData> mMovieDataList;
+        FavoriteMoviesHandler(ArrayList<MovieData> list) {
+            mMovieDataList = list;
+        }
+
+        @Override
+        public void onStartLoading(Context context) { }
+
+
+        @Override
+        public Cursor onLoadInBackground(Context context, Bundle args) {
+            return null;
+        }
+
+        @Override
+        public void onLoadFinished(Context context, Cursor cursor) {
+            if (cursor == null && !cursor.moveToFirst())
+                return;
+
+            int index = cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE);
+            while (cursor.moveToNext()) {
+
+                String movieTitle = cursor.getString(index);
+
+                Log.d(TAG, "Movie in DB: " + movieTitle);
+            }
+        }
+    }
+
     // [END] Implement fetch, parse for json and data processing
 
 
@@ -321,5 +368,7 @@ public class MainActivity
 
         return super.isVerifiedTheMovieDbApiKey();
     }
+
+
     // [END] Handle connectivity issues
 }
