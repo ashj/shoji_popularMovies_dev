@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.FavoriteMoviesCursorLoader;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksEx;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksListenersInterface;
+import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderIDs;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_LoaderCallBacksListeners;
 import com.shoji.example.android.popularmoviesstage1.data.MoviesListAdapter;
 import com.shoji.example.android.popularmoviesstage1.data.MoviesListAdapter.MovieDataAdapterOnClickHandler;
@@ -37,7 +38,7 @@ public class MainActivity
         implements MovieDataAdapterOnClickHandler,
         SharedPreferences.OnSharedPreferenceChangeListener {
     private final static String TAG = MainActivity.class.getSimpleName();
-    private final static int LOADER_ID_FETCH_MOVIE_DATA_BY_CRITERION = 10000;
+
 
     private final static String SAVE_INSTANCE_STATE_MOVIE_DATA_KEY = "movie-data-array-key";
     private final static String SAVE_INSTANCE_STATE_LIST_POSITION_KEY = "list-position-key";
@@ -154,7 +155,7 @@ public class MainActivity
 
         Bundle args = createArgs();
 
-        initOrRestartLoader(LOADER_ID_FETCH_MOVIE_DATA_BY_CRITERION,
+        initOrRestartLoader(LoaderIDs.LOADER_ID_FETCH_MOVIE_DATA_BY_CRITERION,
                 args, mFetchMovieDataLoaderCallbacks);
     }
 

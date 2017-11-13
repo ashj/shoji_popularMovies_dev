@@ -16,9 +16,7 @@ import java.util.ArrayList;
 
 
 public class TheMovieDb_GetMovieCompleteDetails {
-    private final static int LOADER_ID_FETCH_MOVIE_DATA = 10001;
-    private final static int LOADER_ID_FETCH_MOVIE_TRAILERS = 10002;
-    private final static int LOADER_ID_FETCH_MOVIE_REVIEWS = 10003;
+
 
 
     private Context mContext;
@@ -58,7 +56,7 @@ public class TheMovieDb_GetMovieCompleteDetails {
 
 
     public void execute() {
-        initOrRestartLoader(LOADER_ID_FETCH_MOVIE_DATA,
+        initOrRestartLoader(LoaderIDs.LOADER_ID_FETCH_MOVIE_DATA,
                 mArgs, mFetchMovieDataByIdLoaderCallbacks);
 
     }
@@ -116,7 +114,7 @@ public class TheMovieDb_GetMovieCompleteDetails {
         public void onLoadFinished(Context context, MovieData result) {
             //Log.d(TAG, "Movie json:"+result);
             mOnLoadFinishedHandler.processMovieData(result);
-            initOrRestartLoader(LOADER_ID_FETCH_MOVIE_TRAILERS,
+            initOrRestartLoader(LoaderIDs.LOADER_ID_FETCH_MOVIE_TRAILERS,
                     mArgs, mFetchMovieTrailersLoaderCallbacks);
         }
     }
@@ -141,7 +139,7 @@ public class TheMovieDb_GetMovieCompleteDetails {
         public void onLoadFinished(Context context, ArrayList<YoutubeTrailerData> result) {
             if(result != null) {
                 mOnLoadFinishedHandler.processMovieTrailers(result);
-                initOrRestartLoader(LOADER_ID_FETCH_MOVIE_REVIEWS,
+                initOrRestartLoader(LoaderIDs.LOADER_ID_FETCH_MOVIE_REVIEWS,
                         mArgs, mFetchMovieReviewsLoaderCallbacks);
             }
         }
