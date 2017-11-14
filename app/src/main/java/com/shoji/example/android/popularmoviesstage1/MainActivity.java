@@ -62,18 +62,18 @@ public class MainActivity
     private TheMovieDb_GetTopRatedMovies mFetchTopRatedMoviesLoaderCallBacks;
     private TheMovieDb_GetTopRatedMovies.OnLoadFinishedLister mTopRatedMoviesHandler;
 
-    private boolean mIsShowFavoritesOnly;
+    private static boolean sIsShowFavoritesOnly;
     private ArrayList<MovieData> mFavoritesMovieData;
     private Context mContext;
 
-    FavoriteContentObserver mFavoriteContentObserver;
+    private static FavoriteContentObserver sFavoriteContentObserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         boolean fetchMovieDataFromNetwork = true;
         mRefreshMovieList = false;
         mContext = this;
-        mFavoriteContentObserver = new FavoriteContentObserver(new Handler());
+        sFavoriteContentObserver = new FavoriteContentObserver(new Handler());
 
 
         super.onCreate(savedInstanceState);
@@ -175,15 +175,15 @@ public class MainActivity
         createFetchListenerAndCallback();
         if(TextUtils.equals(getString(R.string.pref_sort_by_favorites_only_value), criterion)) {
             Log.d(TAG, "Running doFetchMovieData - favorites");
-            mIsShowFavoritesOnly = true;
+            sIsShowFavoritesOnly = true;
             mFavoritesMovieData = null;
 
-            mFavoriteContentObserver.register();
+            sFavoriteContentObserver.register();
             mFetchPopularMoviesLoaderCallBacks.execute();
         }
         else {
-            mIsShowFavoritesOnly = false;
-            mFavoriteContentObserver.unregister();
+            sIsShowFavoritesOnly = false;
+            sFavoriteContentObserver.unregister();
 
             if (TextUtils.equals(getString(R.string.pref_sort_by_popularity_value), criterion)) {
                 Log.d(TAG, "Running doFetchMovieData - popular");
@@ -273,14 +273,19 @@ public class MainActivity
             redoFetchMovieData();
             mRefreshMovieList = false;
         }
+        if(sIsShowFavoritesOnly) {
+            if(sFavoriteContentObserver != null) {
+                sFavoriteContentObserver.register();
+            }
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mSharedPreference.unregisterOnSharedPreferenceChangeListener(this);
-        if(mFavoriteContentObserver != null)
-            mFavoriteContentObserver.unregister();
+        if(sFavoriteContentObserver != null)
+            sFavoriteContentObserver.unregister();
     }
 
     private void redoFetchMovieData() {
@@ -306,13 +311,13 @@ public class MainActivity
             if(result == null || result.size() == 0) {
                 textView.setText(R.string.error_null_json_returned);
 
-                if(mIsShowFavoritesOnly) {
+                if(sIsShowFavoritesOnly) {
                     Log.d(TAG, "--- CASES FAVORITE ONLY #1a ----");
                     // try next step
                     mFetchTopRatedMoviesLoaderCallBacks.execute();
                 }
             }
-            else if(mIsShowFavoritesOnly) {
+            else if(sIsShowFavoritesOnly) {
                 Log.d(TAG, "--- CASES FAVORITE ONLY #1b ----");
                 mFavoritesMovieData = result;
                 mFetchTopRatedMoviesLoaderCallBacks.execute();
@@ -334,7 +339,7 @@ public class MainActivity
             if(result == null || result.size() == 0) {
                 textView.setText(R.string.error_null_json_returned);
 
-                if(mIsShowFavoritesOnly) {
+                if(sIsShowFavoritesOnly) {
                     // add list here, might have something
                     Log.d(TAG, "--- CASES FAVORITE ONLY #2a----");
 
@@ -344,7 +349,7 @@ public class MainActivity
             }
             else {
                 // TODO test apply Favorites
-                if(mIsShowFavoritesOnly) {
+                if(sIsShowFavoritesOnly) {
                     Log.d(TAG, "--- CASES FAVORITE ONLY #2b----");
 
 
@@ -462,12 +467,13 @@ public class MainActivity
     // [END] Handle connectivity issues
 
     private class FavoriteContentObserver extends ContentObserver {
-
+        private final String TAG = FavoriteContentObserver.class.getSimpleName();
         public FavoriteContentObserver(Handler handler) {
             super(handler);
         }
 
         public void register() {
+            Log.d(TAG, "Register Content Observer");
             mContext.getContentResolver().registerContentObserver(
                     FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
                     false,
@@ -475,6 +481,7 @@ public class MainActivity
             );
         }
         public void unregister() {
+            Log.d(TAG, "Unregister Content Observer");
             mContext.getContentResolver().unregisterContentObserver(this);
         }
 
