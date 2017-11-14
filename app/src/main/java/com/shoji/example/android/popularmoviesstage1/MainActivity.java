@@ -1,9 +1,12 @@
 package com.shoji.example.android.popularmoviesstage1;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.ContentObserver;
 import android.database.Cursor;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
@@ -63,21 +66,21 @@ public class MainActivity
     private ArrayList<MovieData> mFavoritesMovieData;
     private Context mContext;
 
+    FavoriteContentObserver mFavoriteContentObserver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         boolean fetchMovieDataFromNetwork = true;
         mRefreshMovieList = false;
         mContext = this;
+        mFavoriteContentObserver = new FavoriteContentObserver(new Handler());
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         createGeneralViews();
         createMovieDataRecyclerView();
-        createFetchListenerAndCallback();
-
-
-
 
         if(savedInstanceState != null) {
             /* Restore movie data to save network usage */
@@ -169,20 +172,27 @@ public class MainActivity
             return;
         }
         String criterion = getCriterion();
-
+        createFetchListenerAndCallback();
         if(TextUtils.equals(getString(R.string.pref_sort_by_favorites_only_value), criterion)) {
+            Log.d(TAG, "Running doFetchMovieData - favorites");
             mIsShowFavoritesOnly = true;
             mFavoritesMovieData = null;
-            createFetchListenerAndCallback();
+
+            mFavoriteContentObserver.register();
             mFetchPopularMoviesLoaderCallBacks.execute();
         }
         else {
             mIsShowFavoritesOnly = false;
+            mFavoriteContentObserver.unregister();
 
-            if (TextUtils.equals(getString(R.string.pref_sort_by_popularity_value), criterion))
+            if (TextUtils.equals(getString(R.string.pref_sort_by_popularity_value), criterion)) {
+                Log.d(TAG, "Running doFetchMovieData - popular");
                 mFetchPopularMoviesLoaderCallBacks.execute();
-            else if (TextUtils.equals(getString(R.string.pref_sort_by_top_rated_value), criterion))
+            }
+            else if (TextUtils.equals(getString(R.string.pref_sort_by_top_rated_value), criterion)) {
+                Log.d(TAG, "Running doFetchMovieData - top rated");
                 mFetchTopRatedMoviesLoaderCallBacks.execute();
+            }
         }
     }
 
@@ -269,11 +279,14 @@ public class MainActivity
     protected void onDestroy() {
         super.onDestroy();
         mSharedPreference.unregisterOnSharedPreferenceChangeListener(this);
+        if(mFavoriteContentObserver != null)
+            mFavoriteContentObserver.unregister();
     }
 
     private void redoFetchMovieData() {
         /* Drop any previous Result then fetch the data. */
         Log.d(TAG, "Calling redoFetchMovieData()");
+        mFavoritesMovieData = null;
         mMoviesListAdapter.setMovieData(null);
         mMovieDataRecyclerView.setAdapter(mMoviesListAdapter);
         if(mFetchMovieDataLoaderCallbacks != null)
@@ -305,6 +318,7 @@ public class MainActivity
                 mFetchTopRatedMoviesLoaderCallBacks.execute();
             }
             else {
+                Log.d(TAG, "--- CASE POPULAR ----");
                 swapMovieData(result);
             }
         }
@@ -446,4 +460,27 @@ public class MainActivity
     }
 
     // [END] Handle connectivity issues
+
+    private class FavoriteContentObserver extends ContentObserver {
+
+        public FavoriteContentObserver(Handler handler) {
+            super(handler);
+        }
+
+        public void register() {
+            mContext.getContentResolver().registerContentObserver(
+                    FavoriteMoviesContract.FavoriteMoviesEntry.CONTENT_URI,
+                    false,
+                    this
+            );
+        }
+        public void unregister() {
+            mContext.getContentResolver().unregisterContentObserver(this);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            redoFetchMovieData();
+        }
+    }
 }
