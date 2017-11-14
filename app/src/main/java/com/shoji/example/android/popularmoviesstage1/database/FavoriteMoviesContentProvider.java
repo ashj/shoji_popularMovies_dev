@@ -23,8 +23,8 @@ public class FavoriteMoviesContentProvider extends ContentProvider {
     private FavoriteMoviesDbHelper mFavoriteMoviesDbHelper;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
-    private static final int FAVORITES = 0;
-    private static final int FAVORITES_WITH_ID = 1;
+    private static final int FAVORITES = 500;
+    private static final int FAVORITES_WITH_ID = 501;
 
     @Override
     public boolean onCreate() {

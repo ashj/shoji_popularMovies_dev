@@ -15,6 +15,9 @@ public class MovieData implements Parcelable {
 
     public MovieData() {}
 
+
+
+
     private MovieData(Parcel in) {
         themoviedb_id = in.readString();
         vote_average = in.readString();
@@ -114,6 +117,22 @@ public class MovieData implements Parcelable {
 
     public void setIsFavorite(int isFavorite) {
         this.isFavorite = isFavorite;
+    }
+
+    /* auto generated equals method */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MovieData movieData = (MovieData) o;
+
+        return themoviedb_id.equals(movieData.themoviedb_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return themoviedb_id.hashCode();
     }
 
     @Override

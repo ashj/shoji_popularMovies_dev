@@ -61,18 +61,20 @@ public class MainActivity
 
     private boolean mIsShowFavoritesOnly;
     private ArrayList<MovieData> mFavoritesMovieData;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         boolean fetchMovieDataFromNetwork = true;
         mRefreshMovieList = false;
+        mContext = this;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         createGeneralViews();
         createMovieDataRecyclerView();
-
+        createFetchListenerAndCallback();
 
 
 
@@ -98,7 +100,7 @@ public class MainActivity
         }
 
         /* Get json in a background thread */
-        createFetchListenerAndCallback();
+
         if (fetchMovieDataFromNetwork) {
             Log.d(TAG, "Calling doFetchMovieData()");
             doFetchMovieData();
@@ -171,6 +173,7 @@ public class MainActivity
         if(TextUtils.equals(getString(R.string.pref_sort_by_favorites_only_value), criterion)) {
             mIsShowFavoritesOnly = true;
             mFavoritesMovieData = null;
+            createFetchListenerAndCallback();
             mFetchPopularMoviesLoaderCallBacks.execute();
         }
         else {
@@ -273,9 +276,9 @@ public class MainActivity
         Log.d(TAG, "Calling redoFetchMovieData()");
         mMoviesListAdapter.setMovieData(null);
         mMovieDataRecyclerView.setAdapter(mMoviesListAdapter);
-        if(mFetchMovieDataLoaderCallbacks!=null)
+        if(mFetchMovieDataLoaderCallbacks != null)
             mFetchMovieDataLoaderCallbacks.resetResult();
-        if(mFetchTopRatedMoviesLoaderCallBacks!=null)
+        if(mFetchTopRatedMoviesLoaderCallBacks != null)
             mFetchTopRatedMoviesLoaderCallBacks.resetResults();
         doFetchMovieData();
     }
@@ -297,16 +300,9 @@ public class MainActivity
                 }
             }
             else if(mIsShowFavoritesOnly) {
-                // TODO test apply Favorites
-
                 Log.d(TAG, "--- CASES FAVORITE ONLY #1b ----");
                 mFavoritesMovieData = result;
-
                 mFetchTopRatedMoviesLoaderCallBacks.execute();
-                //FavoriteMoviesHandler handler = new FavoriteMoviesHandler(result);
-                //FavoriteMoviesCursorLoader loader = new FavoriteMoviesCursorLoader(null, handler);
-                //loader.queryFavoriteMovies(getSupportLoaderManager());
-
             }
             else {
                 swapMovieData(result);
@@ -328,10 +324,7 @@ public class MainActivity
                     // add list here, might have something
                     Log.d(TAG, "--- CASES FAVORITE ONLY #2a----");
 
-                    if (mFavoritesMovieData == null)
-                        mFavoritesMovieData = result;
-                    else
-                        mFavoritesMovieData.addAll(result);
+                    mFavoritesMovieData = mergeArrayListUnique(mFavoritesMovieData, result);
                     swapMovieData(mFavoritesMovieData);
                 }
             }
@@ -340,14 +333,14 @@ public class MainActivity
                 if(mIsShowFavoritesOnly) {
                     Log.d(TAG, "--- CASES FAVORITE ONLY #2b----");
 
-                    //FavoriteMoviesHandler handler = new FavoriteMoviesHandler(result);
-                    //FavoriteMoviesCursorLoader loader = new FavoriteMoviesCursorLoader(null, handler);
-                    //loader.queryFavoriteMovies(getSupportLoaderManager());
-                    if (mFavoritesMovieData == null)
-                        mFavoritesMovieData = result;
-                    else
-                        mFavoritesMovieData.addAll(result);
-                    swapMovieData(mFavoritesMovieData);
+
+                    mFavoritesMovieData = mergeArrayListUnique(mFavoritesMovieData, result);
+
+                    /* Query the database to get the favorites */
+                    FavoriteMoviesHandler handler = new FavoriteMoviesHandler(mFavoritesMovieData);
+                    FavoriteMoviesCursorLoader loader = new FavoriteMoviesCursorLoader(mContext, handler);
+                    loader.queryFavoriteMovies(getSupportLoaderManager());
+
                 }
                 else {
                     swapMovieData(result);
@@ -358,6 +351,20 @@ public class MainActivity
 
         @Override
         public void processFinishAll() { }
+    }
+
+    private ArrayList<MovieData> mergeArrayListUnique(ArrayList<MovieData> a, ArrayList<MovieData> b) {
+
+        if(a == null) {
+            a = b;
+        }
+        else if(b != null) {
+            for(MovieData data : b) {
+                if(!a.contains(data))
+                    a.add(data);
+            }
+        }
+        return a;
     }
 
 
@@ -382,13 +389,33 @@ public class MainActivity
             if (cursor == null && !cursor.moveToFirst())
                 return;
 
-            int index = cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE);
-            while (cursor.moveToNext()) {
+            if(mFavoritesMovieData != null && mFavoritesMovieData.size() > 0) {
+                ArrayList<MovieData> finalFavoriteList = new ArrayList<>();
+                int titleIdx = cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_TITLE);
+                int idIdx = cursor.getColumnIndex(FavoriteMoviesContract.FavoriteMoviesEntry.COLUMN_MOVIE_ID);
+                int listIdx;
 
-                String movieTitle = cursor.getString(index);
+                while (cursor.moveToNext()) {
+                    String movieTitle = cursor.getString(titleIdx);
+                    String movieId = cursor.getString(idIdx);
+                    MovieData movie = new MovieData();
+                    movie.setId(movieId);
+                    Log.d(TAG, "Movie in DB: " + movieTitle);
 
-                Log.d(TAG, "Movie in DB: " + movieTitle);
+                    if ((listIdx = mFavoritesMovieData.indexOf(movie)) > 0) {
+                        finalFavoriteList.add(mFavoritesMovieData.get(listIdx));
+                        Log.d(TAG, "Added: " + movieTitle);
+                    } else {
+                        Log.d(TAG, "Discarted: " + movieTitle);
+                    }
+
+
+                }
+                mFavoritesMovieData = finalFavoriteList;
+                cursor.close();
             }
+
+            swapMovieData(mFavoritesMovieData);
         }
     }
 
