@@ -22,12 +22,14 @@ public abstract class TheMovieDb_LoaderCallBacksListeners<Result>
         Log.d(TAG, "Called");
         Result result = null;
         String jsonString = null;
+        String param = null;
 
         // Fetch json string.
         if (args != null && args.containsKey(STRING_PARAM)) {
-            String param = args.getString(STRING_PARAM);
-            jsonString = fetchJsonString(param);
+            param = args.getString(STRING_PARAM);
         }
+        jsonString = fetchJsonString(param);
+
         // Parse jsonString
         if(jsonString != null && jsonString.length() != 0) {
                 result = parseJsonString(jsonString);

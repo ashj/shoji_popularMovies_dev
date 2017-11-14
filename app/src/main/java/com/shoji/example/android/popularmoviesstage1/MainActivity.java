@@ -23,7 +23,6 @@ import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBa
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.LoaderCallBacksListenersInterface;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_GetPopularMovies;
 import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_GetTopRatedMovies;
-import com.shoji.example.android.popularmoviesstage1.backgroundtask.TheMovieDb_LoaderCallBacksListeners;
 import com.shoji.example.android.popularmoviesstage1.data.MoviesListAdapter;
 import com.shoji.example.android.popularmoviesstage1.data.MoviesListAdapter.MovieDataAdapterOnClickHandler;
 import com.shoji.example.android.popularmoviesstage1.data.MovieData;
@@ -55,7 +54,7 @@ public class MainActivity
 
     private LoaderCallBacksEx<ArrayList<MovieData>> mFetchMovieDataLoaderCallbacks;
 
-    private TheMovieDb_GetPopularMovies mFetchPopularMovies;
+    private TheMovieDb_GetPopularMovies mFetchPopularMoviesLoaderCallBacks;
     private TheMovieDb_GetPopularMovies.OnLoadFinishedLister mPopularMoviesHandler;
     private TheMovieDb_GetTopRatedMovies mFetchTopRatedMoviesLoaderCallBacks;
     private TheMovieDb_GetTopRatedMovies.OnLoadFinishedLister mTopRatedMoviesHandler;
@@ -150,13 +149,13 @@ public class MainActivity
 
     private void createFetchListenerAndCallback() {
         Context context = this;
+        Bundle args = null;
 
-        Bundle args = createArgs(); // needed
         mPopularMoviesHandler = new PopularMoviesHandler();
-        mFetchPopularMovies = new TheMovieDb_GetPopularMovies(context, args, getSupportLoaderManager(), mPopularMoviesHandler);
+        mFetchPopularMoviesLoaderCallBacks = new TheMovieDb_GetPopularMovies(context, args, getSupportLoaderManager(), mPopularMoviesHandler);
+
         mTopRatedMoviesHandler = new TopRatedMoviesHandler();
         mFetchTopRatedMoviesLoaderCallBacks = new TheMovieDb_GetTopRatedMovies(context, args, getSupportLoaderManager(), mTopRatedMoviesHandler);
-
     }
 
     private void doFetchMovieData() {
@@ -165,29 +164,21 @@ public class MainActivity
         if (!arePreconditionsValid(R.id.activity_main_root_layout_id)) {
             return;
         }
-        String criterion = mSharedPreference.getString(
-                getString(R.string.pref_sort_criterion_key),
-                getString(R.string.pref_sort_criterion_default_value));
+        String criterion = getCriterion();
 
         if(TextUtils.equals(getString(R.string.pref_sort_by_popularity_value), criterion))
-            mFetchPopularMovies.execute();
+            mFetchPopularMoviesLoaderCallBacks.execute();
         else if(TextUtils.equals(getString(R.string.pref_sort_by_top_rated_value), criterion))
             mFetchTopRatedMoviesLoaderCallBacks.execute();
     }
 
-    private Bundle createArgs() {
-        String criterion = mSharedPreference.getString(
+    private String getCriterion() {
+        return mSharedPreference.getString(
                 getString(R.string.pref_sort_criterion_key),
                 getString(R.string.pref_sort_criterion_default_value));
-        //Log.d(TAG, "createCriterionBundle -- criterion="+criterion);
-
-        Bundle args = new Bundle();
-        args.putString(TheMovieDb_LoaderCallBacksListeners.STRING_PARAM, criterion);
-        return args;
     }
 
-
-
+    /* Tap on a movie poster */
     @Override
     public void onClick(MovieData movieData) {
         //Log.d(TAG, "At main: "+movieData);
@@ -200,6 +191,7 @@ public class MainActivity
         startActivity(intent);
     }
 
+    /* Set new data in the adapter and refresh the recycler view */
     private void swapMovieData(ArrayList<MovieData> newMovieData) {
         //Log.d(TAG, "swapMovieData");
         mMoviesListAdapter.setMovieData(newMovieData);
