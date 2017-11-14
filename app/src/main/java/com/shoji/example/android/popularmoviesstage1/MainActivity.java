@@ -126,11 +126,13 @@ public class MainActivity
         // You can change this divider to adjust the size of the poster
         int widthDivider = getResources().getInteger(R.integer.main_activity_columns_width_divider);
         int minNumColumns = getResources().getInteger(R.integer.main_activity_columns_minimum_num_columns);
-
+        int maxNumColums = getResources().getInteger(R.integer.main_activity_columns_maximum_num_columns);
         int width = displayMetrics.widthPixels;
         int nColumns = width / widthDivider;
         if (nColumns < minNumColumns)
-            return minNumColumns;
+            nColumns = minNumColumns;
+        else if (nColumns > maxNumColums)
+            nColumns = maxNumColums;
         return nColumns;
     }
     // [END] creation of views
