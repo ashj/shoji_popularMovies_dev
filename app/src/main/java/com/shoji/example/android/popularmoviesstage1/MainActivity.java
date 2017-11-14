@@ -70,7 +70,7 @@ public class MainActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        boolean fetchMovieDataFromNetwork = true;
+        boolean isInstanceStateDataPresent;
         mRefreshMovieList = false;
         mContext = this;
         sFavoriteContentObserver = new FavoriteContentObserver(new Handler());
@@ -82,36 +82,17 @@ public class MainActivity
         createGeneralViews();
         createMovieDataRecyclerView();
 
-        if(savedInstanceState != null) {
-            /* Restore movie data to save network usage */
-            if(savedInstanceState.containsKey(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY)) {
-                Log.d(TAG, "savedInstanceState containsKey: "+SAVE_INSTANCE_STATE_MOVIE_DATA_KEY);
-                ArrayList<MovieData> movieData = savedInstanceState.getParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY);
-                if(movieData != null && movieData.size() != 0) {
-                    swapMovieData(movieData);
-                    fetchMovieDataFromNetwork = false;
-                    Log.d(TAG, "Restored movie data from "+SAVE_INSTANCE_STATE_MOVIE_DATA_KEY);
-                }
-            }
-
-            /* Restore scroll position of Recycler View */
-            if(savedInstanceState.containsKey(SAVE_INSTANCE_STATE_LIST_POSITION_KEY)) {
-                Log.d(TAG, "savedInstanceState containsKey: "+SAVE_INSTANCE_STATE_LIST_POSITION_KEY);
-                Parcelable savedState = savedInstanceState.getParcelable(SAVE_INSTANCE_STATE_LIST_POSITION_KEY);
-                mMovieDataRecyclerView.getLayoutManager().onRestoreInstanceState(savedState);
-            }
-        }
+        isInstanceStateDataPresent = isRestoreInstanceStatePossible(savedInstanceState);
 
         /* Get json in a background thread */
-
-        if (fetchMovieDataFromNetwork) {
-            Log.d(TAG, "Calling doFetchMovieData()");
+        if (false == isInstanceStateDataPresent) {
+            //Log.d(TAG, "Calling doFetchMovieData()");
             doFetchMovieData();
         }
     }
 
 
-
+    // [START] creation of views
     private void createGeneralViews() {
         mSharedPreference = PreferenceManager.getDefaultSharedPreferences(this);
         mSharedPreference.registerOnSharedPreferenceChangeListener(this); //Listen for Preferences changes
@@ -152,8 +133,40 @@ public class MainActivity
             return minNumColumns;
         return nColumns;
     }
+    // [END] creation of views
 
 
+
+
+    // [START] restore saved instance
+    private boolean isRestoreInstanceStatePossible(Bundle savedInstanceState) {
+        boolean wasSucceeded = false;
+        if(savedInstanceState != null) {
+            /* Restore movie data to save network usage */
+            if(savedInstanceState.containsKey(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY)) {
+                //Log.d(TAG, "savedInstanceState containsKey: "+SAVE_INSTANCE_STATE_MOVIE_DATA_KEY);
+                ArrayList<MovieData> movieData = savedInstanceState.getParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY);
+                if(movieData != null && movieData.size() != 0) {
+                    swapMovieData(movieData);
+                    wasSucceeded = true;
+                    Log.d(TAG, "Restored movie data from "+SAVE_INSTANCE_STATE_MOVIE_DATA_KEY);
+                }
+
+                /* Restore scroll position of Recycler View */
+                if(savedInstanceState.containsKey(SAVE_INSTANCE_STATE_LIST_POSITION_KEY)) {
+                    Log.d(TAG, "savedInstanceState containsKey: "+SAVE_INSTANCE_STATE_LIST_POSITION_KEY);
+                    Parcelable savedState = savedInstanceState.getParcelable(SAVE_INSTANCE_STATE_LIST_POSITION_KEY);
+                    mMovieDataRecyclerView.getLayoutManager().onRestoreInstanceState(savedState);
+                }
+            }
+        }
+        return wasSucceeded;
+    }
+    // [END] restore saved instance
+
+
+
+    // [START] Callbacks and handlers to fetch/parse json and process the data
     private void createFetchListenerAndCallback() {
         Context context = this;
         Bundle args = null;
@@ -201,6 +214,9 @@ public class MainActivity
                 getString(R.string.pref_sort_criterion_key),
                 getString(R.string.pref_sort_criterion_default_value));
     }
+    // [END] Callbacks and handlers to fetch/parse json and process the data
+
+
 
     /* Tap on a movie poster */
     @Override
@@ -230,6 +246,7 @@ public class MainActivity
         outState.putParcelable(SAVE_INSTANCE_STATE_LIST_POSITION_KEY, mMovieDataRecyclerView.getLayoutManager().onSaveInstanceState());
         outState.putParcelableArrayList(SAVE_INSTANCE_STATE_MOVIE_DATA_KEY, mMoviesListAdapter.getMovieData());
     }
+
 
 
     // [START] Activity menu bar
@@ -312,18 +329,18 @@ public class MainActivity
                 textView.setText(R.string.error_null_json_returned);
 
                 if(sIsShowFavoritesOnly) {
-                    Log.d(TAG, "--- CASES FAVORITE ONLY #1a ----");
+                    //Log.d(TAG, "--- CASES FAVORITE ONLY #1a ----");
                     // try next step
                     mFetchTopRatedMoviesLoaderCallBacks.execute();
                 }
             }
             else if(sIsShowFavoritesOnly) {
-                Log.d(TAG, "--- CASES FAVORITE ONLY #1b ----");
+                //Log.d(TAG, "--- CASES FAVORITE ONLY #1b ----");
                 mFavoritesMovieData = result;
                 mFetchTopRatedMoviesLoaderCallBacks.execute();
             }
             else {
-                Log.d(TAG, "--- CASE POPULAR ----");
+                //Log.d(TAG, "--- CASE POPULAR ----");
                 swapMovieData(result);
             }
         }
@@ -341,30 +358,25 @@ public class MainActivity
 
                 if(sIsShowFavoritesOnly) {
                     // add list here, might have something
-                    Log.d(TAG, "--- CASES FAVORITE ONLY #2a----");
+                    //Log.d(TAG, "--- CASES FAVORITE ONLY #2a----");
 
                     mFavoritesMovieData = mergeArrayListUnique(mFavoritesMovieData, result);
                     swapMovieData(mFavoritesMovieData);
                 }
             }
             else {
-                // TODO test apply Favorites
                 if(sIsShowFavoritesOnly) {
-                    Log.d(TAG, "--- CASES FAVORITE ONLY #2b----");
-
-
+                    //Log.d(TAG, "--- CASES FAVORITE ONLY #2b----");
                     mFavoritesMovieData = mergeArrayListUnique(mFavoritesMovieData, result);
 
                     /* Query the database to get the favorites */
                     FavoriteMoviesHandler handler = new FavoriteMoviesHandler(mFavoritesMovieData);
                     FavoriteMoviesCursorLoader loader = new FavoriteMoviesCursorLoader(mContext, handler);
                     loader.queryFavoriteMovies(getSupportLoaderManager());
-
                 }
                 else {
                     swapMovieData(result);
                 }
-
             }
         }
 
@@ -373,7 +385,6 @@ public class MainActivity
     }
 
     private ArrayList<MovieData> mergeArrayListUnique(ArrayList<MovieData> a, ArrayList<MovieData> b) {
-
         if(a == null) {
             a = b;
         }
@@ -385,8 +396,10 @@ public class MainActivity
         }
         return a;
     }
+    // [END] Implement fetch, parse for json and data processing
 
 
+    // [START] Favorites only implementation
     private class FavoriteMoviesHandler
         implements LoaderCallBacksListenersInterface<Cursor> {
         ArrayList<MovieData> mMovieDataList;
@@ -437,8 +450,7 @@ public class MainActivity
             swapMovieData(mFavoritesMovieData);
         }
     }
-
-    // [END] Implement fetch, parse for json and data processing
+    // [END] Favorites only implementation
 
 
     // [START] Handle connectivity issues
@@ -463,9 +475,9 @@ public class MainActivity
         }
         return true;
     }
-
     // [END] Handle connectivity issues
 
+    // [START] Favorites only implementation
     private class FavoriteContentObserver extends ContentObserver {
         private final String TAG = FavoriteContentObserver.class.getSimpleName();
         public FavoriteContentObserver(Handler handler) {
@@ -490,4 +502,5 @@ public class MainActivity
             redoFetchMovieData();
         }
     }
+    // [END] Favorites only implementation
 }
