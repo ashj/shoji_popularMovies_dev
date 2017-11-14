@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="main_activity_columns_minimum_num_columns">3</integer>
+    <integer name="main_activity_columns_maximum_num_columns">4</integer>
 </resources>
