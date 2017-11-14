@@ -420,8 +420,14 @@ public class MainActivity
 
         @Override
         public void onLoadFinished(Context context, Cursor cursor) {
-            if (cursor == null && !cursor.moveToFirst())
+            if (cursor == null && !cursor.moveToFirst()) {
+                textView.setText(R.string.error_null_json_returned);
                 return;
+            }
+            else if(cursor.getCount() == 0) {
+                textView.setText(R.string.empty_favorite_movies_list);
+                return;
+            }
 
             if(mFavoritesMovieData != null && mFavoritesMovieData.size() > 0) {
                 ArrayList<MovieData> finalFavoriteList = new ArrayList<>();
