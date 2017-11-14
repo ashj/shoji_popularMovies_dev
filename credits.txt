@@ -1,0 +1,6 @@
+// CREDITS
+got icon from
+https://www.flaticon.com/free-icon/play-button_26025
+https://material.io/icons/
+content observer
+https://gist.github.com/JBirdVegas/3874450
