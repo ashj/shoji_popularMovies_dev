@@ -59,6 +59,8 @@ public class MainActivity
     private TheMovieDb_GetTopRatedMovies mFetchTopRatedMoviesLoaderCallBacks;
     private TheMovieDb_GetTopRatedMovies.OnLoadFinishedLister mTopRatedMoviesHandler;
 
+    private boolean mIsShowFavoritesOnly;
+    private ArrayList<MovieData> mFavoritesMovieData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,10 +168,19 @@ public class MainActivity
         }
         String criterion = getCriterion();
 
-        if(TextUtils.equals(getString(R.string.pref_sort_by_popularity_value), criterion))
+        if(TextUtils.equals(getString(R.string.pref_sort_by_favorites_only_value), criterion)) {
+            mIsShowFavoritesOnly = true;
+            mFavoritesMovieData = null;
             mFetchPopularMoviesLoaderCallBacks.execute();
-        else if(TextUtils.equals(getString(R.string.pref_sort_by_top_rated_value), criterion))
-            mFetchTopRatedMoviesLoaderCallBacks.execute();
+        }
+        else {
+            mIsShowFavoritesOnly = false;
+
+            if (TextUtils.equals(getString(R.string.pref_sort_by_popularity_value), criterion))
+                mFetchPopularMoviesLoaderCallBacks.execute();
+            else if (TextUtils.equals(getString(R.string.pref_sort_by_top_rated_value), criterion))
+                mFetchTopRatedMoviesLoaderCallBacks.execute();
+        }
     }
 
     private String getCriterion() {
@@ -278,24 +289,27 @@ public class MainActivity
             mLoadingMovieDataProgressBar.setVisibility(View.INVISIBLE);
             if(result == null || result.size() == 0) {
                 textView.setText(R.string.error_null_json_returned);
+
+                if(mIsShowFavoritesOnly) {
+                    Log.d(TAG, "--- CASES FAVORITE ONLY #1a ----");
+                    // try next step
+                    mFetchTopRatedMoviesLoaderCallBacks.execute();
+                }
+            }
+            else if(mIsShowFavoritesOnly) {
+                // TODO test apply Favorites
+
+                Log.d(TAG, "--- CASES FAVORITE ONLY #1b ----");
+                mFavoritesMovieData = result;
+
+                mFetchTopRatedMoviesLoaderCallBacks.execute();
+                //FavoriteMoviesHandler handler = new FavoriteMoviesHandler(result);
+                //FavoriteMoviesCursorLoader loader = new FavoriteMoviesCursorLoader(null, handler);
+                //loader.queryFavoriteMovies(getSupportLoaderManager());
+
             }
             else {
-                // TODO test apply Favorites
-                String criterion = mSharedPreference.getString(
-                        getString(R.string.pref_sort_criterion_key),
-                        getString(R.string.pref_sort_criterion_default_value));
-
-                if (TextUtils.equals(criterion,
-                        getString(R.string.pref_sort_by_favorites_only_value))) {
-                    Log.d(TAG, "--- CASES FAVORITE ONLY ----");
-
-                    FavoriteMoviesHandler handler = new FavoriteMoviesHandler(result);
-                    FavoriteMoviesCursorLoader loader = new FavoriteMoviesCursorLoader(null, handler);
-                    loader.queryFavoriteMovies(getSupportLoaderManager());
-                }
-                else {
-                    swapMovieData(result);
-                }
+                swapMovieData(result);
             }
         }
 
@@ -309,24 +323,36 @@ public class MainActivity
             mLoadingMovieDataProgressBar.setVisibility(View.INVISIBLE);
             if(result == null || result.size() == 0) {
                 textView.setText(R.string.error_null_json_returned);
+
+                if(mIsShowFavoritesOnly) {
+                    // add list here, might have something
+                    Log.d(TAG, "--- CASES FAVORITE ONLY #2a----");
+
+                    if (mFavoritesMovieData == null)
+                        mFavoritesMovieData = result;
+                    else
+                        mFavoritesMovieData.addAll(result);
+                    swapMovieData(mFavoritesMovieData);
+                }
             }
             else {
                 // TODO test apply Favorites
-                String criterion = mSharedPreference.getString(
-                        getString(R.string.pref_sort_criterion_key),
-                        getString(R.string.pref_sort_criterion_default_value));
+                if(mIsShowFavoritesOnly) {
+                    Log.d(TAG, "--- CASES FAVORITE ONLY #2b----");
 
-                if (TextUtils.equals(criterion,
-                        getString(R.string.pref_sort_by_favorites_only_value))) {
-                    Log.d(TAG, "--- CASES FAVORITE ONLY ----");
-
-                    FavoriteMoviesHandler handler = new FavoriteMoviesHandler(result);
-                    FavoriteMoviesCursorLoader loader = new FavoriteMoviesCursorLoader(null, handler);
-                    loader.queryFavoriteMovies(getSupportLoaderManager());
+                    //FavoriteMoviesHandler handler = new FavoriteMoviesHandler(result);
+                    //FavoriteMoviesCursorLoader loader = new FavoriteMoviesCursorLoader(null, handler);
+                    //loader.queryFavoriteMovies(getSupportLoaderManager());
+                    if (mFavoritesMovieData == null)
+                        mFavoritesMovieData = result;
+                    else
+                        mFavoritesMovieData.addAll(result);
+                    swapMovieData(mFavoritesMovieData);
                 }
                 else {
                     swapMovieData(result);
                 }
+
             }
         }
 
@@ -379,13 +405,18 @@ public class MainActivity
     }
 
     @Override
-    protected boolean isVerifiedTheMovieDbApiKey() {
-        textView.setText(R.string.error_invalid_themoviedb_api_key);
-        mLoadingMovieDataProgressBar.setVisibility(View.INVISIBLE);
-
-        return super.isVerifiedTheMovieDbApiKey();
+    protected boolean arePreconditionsValid(int rootViewId) {
+        if (!isNetworkConnected()) {
+            handleConnectivityIssue(rootViewId);
+            return false;
+        }
+        else if (!isVerifiedTheMovieDbApiKey()) {
+            textView.setText(R.string.error_invalid_themoviedb_api_key);
+            mLoadingMovieDataProgressBar.setVisibility(View.INVISIBLE);
+            return false;
+        }
+        return true;
     }
-
 
     // [END] Handle connectivity issues
 }
